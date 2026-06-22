@@ -13,6 +13,16 @@ return new class extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
+            $table->string('kode_booking')->unique();
+            $table->string('nama_tamu');
+            $table->string('email_tamu');
+            $table->string('telepon_tamu');
+            $table->foreignId('room_id')->constrained('rooms')->onDelete('cascade');
+            $table->date('tanggal_check_in');
+            $table->date('tanggal_check_out');
+            $table->integer('total_harga');
+            $table->string('status')->default('pending'); // pending, dikonfirmasi, check_in, check_out, dibatalkan
+            $table->text('catatan')->nullable();
             $table->timestamps();
         });
     }
@@ -25,3 +35,4 @@ return new class extends Migration
         Schema::dropIfExists('reservations');
     }
 };
+
