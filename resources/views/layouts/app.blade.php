@@ -15,8 +15,7 @@
     <!-- Navigation Bar -->
     <nav class="navbar" id="mainNavbar">
         <a href="{{ url('/') }}" class="nav-logo">
-            <i data-lucide="hotel" style="color: var(--primary-color);"></i>
-            N<span style="color: var(--primary-color);">★</span>JM <span>Hotel</span>
+            <img src="{{ asset('gambar/logo/logoSudut.png') }}" alt="N★JM Hotel Logo" style="height: 120px; width: 140; object-fit: contain;">
         </a>
         
         <ul class="nav-links">
@@ -27,7 +26,7 @@
                 <a href="{{ url('/reservasi/lacak') }}">Lacak Reservasi</a>
             </li>
             <li class="nav-item">
-                <a href="{{ url('/admin/login') }}" class="nav-btn">Login Admin</a>
+                <a href="{{ url('/admin/login') }}" class="nav-btn">Login</a>
             </li>
         </ul>
     </nav>
@@ -43,11 +42,11 @@
             <div class="footer-col footer-about">
                 <h3>N★JM Hotel</h3>
                 <p>Menyediakan akomodasi penginapan mewah, nyaman, dan berkelas dengan pelayanan terbaik di pusat kota. Nikmati suasana hangat bersama kami.</p>
-                <p><i data-lucide="map-pin" style="display:inline; width:16px; margin-right:5px; vertical-align:middle;"></i> Jl. Bintang Raya No. 8, Jakarta</p>
+                <p><i data-lucide="map-pin" style="display:inline; width:16px; margin-right:5px; vertical-align:middle;"></i> Jl. Kapalo Koto, Pauh, Padang</p>
             </div>
             
             <div class="footer-col">
-                <h3>Tautan Penting</h3>
+                <h3>Info</h3>
                 <ul class="footer-links">
                     <li><a href="{{ url('/') }}">Beranda</a></li>
                     <li><a href="{{ url('/reservasi/lacak') }}">Lacak Reservasi</a></li>
@@ -57,8 +56,8 @@
             
             <div class="footer-col footer-contact">
                 <h3>Hubungi Kami</h3>
-                <p><i data-lucide="phone" style="width:16px;"></i> +62 21 555 1234</p>
-                <p><i data-lucide="mail" style="width:16px;"></i> info@najmhotel.com</p>
+                <p><i data-lucide="phone" style="width:16px;"></i> +6281372747968</p>
+                <p><i data-lucide="mail" style="width:16px;"></i> NajmHotelRacing@gmail.com</p>
                 <p><i data-lucide="clock" style="width:16px;"></i> Resepsionis 24 Jam</p>
             </div>
         </div>
