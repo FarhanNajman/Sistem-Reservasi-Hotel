@@ -1,0 +1,88 @@
+@extends('layouts.app')
+
+@section('title', 'N★JM Hotel - Masuk Ke Akun')
+
+@section('content')
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-header">
+            <img src="{{ asset('gambar/logo/logo1.png') }}" alt="Logo Utama">
+            <h2>Selamat Datang</h2>
+            <p>Silakan masuk untuk melanjutkan reservasi Anda</p>
+        </div>
+
+        <form action="{{ url('/login') }}" method="POST" class="auth-form">
+            @csrf
+
+            <div class="form-group">
+                <label for="username">Username</label>
+                <div class="input-wrapper">
+                    <input type="text" id="username" name="username" placeholder="Masukkan username Anda" value="{{ old('username') }}" required autofocus>
+                    <i data-lucide="user"></i>
+                </div>
+                @error('username')
+                    <div class="error-message">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <input type="password" id="password" name="password" placeholder="Masukkan password Anda" required>
+                    <i data-lucide="lock"></i>
+                    <button type="button" class="password-toggle" id="passwordToggle" aria-label="Tampilkan password">
+                        <i data-lucide="eye" id="eyeIcon"></i>
+                    </button>
+                </div>
+                @error('password')
+                    <div class="error-message">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="auth-options">
+                <label class="remember-me">
+                    <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                    <span>Ingat Saya</span>
+                </label>
+                {{-- <a href="#" class="forgot-password">Lupa Password?</a> --}}
+            </div>
+
+            <button type="submit" class="auth-btn">
+                <i data-lucide="log-in"></i>
+                Masuk
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Belum punya akun? <a href="{{ url('/register') }}">Daftar Sekarang</a></p>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const passwordInput = document.getElementById('password');
+        const passwordToggle = document.getElementById('passwordToggle');
+        const eyeIcon = document.getElementById('eyeIcon');
+
+        passwordToggle.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Ubah icon Lucide
+            if (type === 'text') {
+                eyeIcon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                eyeIcon.setAttribute('data-lucide', 'eye');
+            }
+            
+            // Re-render icon lucide yang berubah secara dinamis
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    });
+</script>
+@endsection

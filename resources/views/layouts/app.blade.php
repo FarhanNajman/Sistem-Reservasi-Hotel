@@ -25,9 +25,24 @@
             <li class="nav-item {{ Request::is('reservasi/lacak') ? 'active' : '' }}">
                 <a href="{{ url('/reservasi/lacak') }}">Lacak Reservasi</a>
             </li>
-            <li class="nav-item">
-                <a href="{{ url('/admin/login') }}" class="nav-btn">Login</a>
-            </li>
+            @auth
+                <li class="nav-item" style="color: var(--text-muted); font-weight: 500; display: flex; align-items: center; gap: 6px;">
+                    <i data-lucide="user" style="width: 16px; color: var(--primary-color);"></i>
+                    <span>{{ Auth::user()->username }}</span>
+                </li>
+                <li class="nav-item">
+                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="nav-btn" style="border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px !important; margin-left: 10px;">
+                            <i data-lucide="log-out" style="width: 14px;"></i> Logout
+                        </button>
+                    </form>
+                </li>
+            @else
+                <li class="nav-item">
+                    <a href="{{ url('/login') }}" class="nav-btn">Login</a>
+                </li>
+            @endauth
         </ul>
     </nav>
 
@@ -67,6 +82,23 @@
         </div>
     </footer>
 
+    <!-- Flash Messages (Toasts) -->
+    @if(session('success'))
+        <div class="alert-toast alert-success" id="successToast">
+            <i data-lucide="check-circle" style="color: #10b981; width: 20px; height: 20px;"></i>
+            <p>{{ session('success') }}</p>
+            <button class="close-toast" onclick="document.getElementById('successToast').remove()"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert-toast alert-error" id="errorToast">
+            <i data-lucide="alert-circle" style="color: #ef4444; width: 20px; height: 20px;"></i>
+            <p>{{ session('error') }}</p>
+            <button class="close-toast" onclick="document.getElementById('errorToast').remove()"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button>
+        </div>
+    @endif
+
     <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
@@ -82,6 +114,25 @@
                 navbar.classList.remove('scrolled');
             }
         });
+
+        // Auto close toasts setelah 4 detik
+        setTimeout(function() {
+            const successToast = document.getElementById('successToast');
+            if (successToast) {
+                successToast.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                successToast.style.opacity = '0';
+                successToast.style.transform = 'translateY(20px)';
+                setTimeout(() => successToast.remove(), 500);
+            }
+            
+            const errorToast = document.getElementById('errorToast');
+            if (errorToast) {
+                errorToast.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                errorToast.style.opacity = '0';
+                errorToast.style.transform = 'translateY(20px)';
+                setTimeout(() => errorToast.remove(), 500);
+            }
+        }, 4000);
     </script>
     @yield('scripts')
 </body>
