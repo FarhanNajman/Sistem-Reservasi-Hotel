@@ -12,6 +12,11 @@ Route::prefix('reservasi_hotel')->group(function () {
         $rooms = Room::all();
         return view('welcome', compact('rooms'));
     });
+
+    Route::get('/kamar/{id}', function ($id) {
+        $room = Room::findOrFail($id);
+        return view('rooms.show', compact('room'));
+    })->name('rooms.show');
 });
 
 // Authentication Routes

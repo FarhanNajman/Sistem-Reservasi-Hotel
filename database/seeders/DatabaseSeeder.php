@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
                 'harga_per_malam' => 350000,
                 'kapasitas' => 2,
                 'deskripsi' => 'Kamar Standard yang nyaman dengan 1 double bed atau 2 single bed, pendingin ruangan (AC), TV LED, akses Wi-Fi gratis, dan kamar mandi dalam dilengkapi dengan shower.',
-                'foto_kamar' => 'https://images.unsplash.com/photo-1611891487122-2075b96244e1?auto=format&fit=crop&w=600&q=80',
+                'foto_kamar' => 'gambar/kamar/standard/standard1.jpg',
                 'status' => 'tersedia',
             ],
             [
@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
                 'harga_per_malam' => 350000,
                 'kapasitas' => 2,
                 'deskripsi' => 'Kamar Standard dengan desain minimalis modern. Dilengkapi dengan 1 double bed, AC, lemari pakaian, TV flat-screen, Wi-Fi gratis, serta kamar mandi shower air hangat.',
-                'foto_kamar' => 'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=600&q=80',
+                'foto_kamar' => 'gambar/kamar/standard/standard2.jpg',
                 'status' => 'tersedia',
             ],
             [
@@ -49,7 +49,7 @@ class DatabaseSeeder extends Seeder
                 'harga_per_malam' => 350000,
                 'kapasitas' => 2,
                 'deskripsi' => 'Kamar Standard dengan fasilitas AC, Wi-Fi gratis, TV, dan 2 single bed. Cocok untuk menginap bersama teman atau kolega.',
-                'foto_kamar' => 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80',
+                'foto_kamar' => 'gambar/kamar/standard/standard3.jpg',
                 'status' => 'perbaikan',
             ],
             [

@@ -55,11 +55,13 @@
             @forelse($rooms as $room)
                 <div class="room-card">
                     <div class="room-img-container">
-                        @if($room->foto_kamar)
-                            <img src="{{ $room->foto_kamar }}" alt="{{ $room->tipe_kamar }}" class="room-img">
-                        @else
-                            <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80" alt="Default Room Image" class="room-img">
-                        @endif
+                        <a href="{{ route('rooms.show', $room->id) }}">
+                            @if($room->foto_kamar)
+                                <img src="{{ filter_var($room->foto_kamar, FILTER_VALIDATE_URL) ? $room->foto_kamar : asset($room->foto_kamar) }}" alt="{{ $room->tipe_kamar }}" class="room-img">
+                            @else
+                                <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80" alt="Default Room Image" class="room-img">
+                            @endif
+                        </a>
                         
                         @if($room->status === 'tersedia')
                             <span class="room-badge tersedia">Tersedia</span>
@@ -70,7 +72,9 @@
                     
                     <div class="room-details">
                         <div class="room-title-row">
-                            <h3 class="room-type">{{ $room->tipe_kamar }}</h3>
+                            <h3 class="room-type">
+                                <a href="{{ route('rooms.show', $room->id) }}" class="room-title-link">{{ $room->tipe_kamar }}</a>
+                            </h3>
                             <span class="room-number">Kamar No. {{ $room->nomor_kamar }}</span>
                         </div>
                         
@@ -85,14 +89,17 @@
                         <div class="room-footer">
                             <div class="room-price-wrapper">
                                 <span class="room-price">Rp {{ number_format($room->harga_per_malam, 0, ',', '.') }}</span>
-                                <span>/ malam</span>
+                                <span style="font-size: 0.8rem; color: var(--text-muted);">/ malam</span>
                             </div>
                             
-                            @if($room->status === 'tersedia')
-                                <a href="{{ url('/reservasi/pesan/'.$room->id) }}" class="room-book-btn">Pesan Sekarang</a>
-                            @else
-                                <a href="#" class="room-book-btn disabled" tabindex="-1">Tidak Tersedia</a>
-                            @endif
+                            <div class="room-actions" style="display: flex; gap: 8px;">
+                                <a href="{{ route('rooms.show', $room->id) }}" class="room-detail-btn">Detail</a>
+                                @if($room->status === 'tersedia')
+                                    <a href="{{ url('/reservasi/pesan/'.$room->id) }}" class="room-book-btn">Pesan</a>
+                                @else
+                                    <a href="#" class="room-book-btn disabled" tabindex="-1">Pesan</a>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
