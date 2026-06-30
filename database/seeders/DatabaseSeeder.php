@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin N*JM Hotel',
             'email' => 'admin@hotel.com',
             'password' => Hash::make('admin123'),
+            'role' => 'admin',
         ]);
 
         // 2. Buat Data Kamar
