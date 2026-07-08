@@ -1436,3 +1436,93 @@ a {
     font-size: 1rem;
     font-weight: 500;
 }
+/* =========================
+   ADMIN DASHBOARD
+========================= */
+
+.admin-dashboard{
+
+    background:#ffffff;
+    border-radius:18px;
+    padding:30px;
+    margin-bottom:40px;
+
+    box-shadow:0 12px 35px rgba(0,0,0,.08);
+}
+
+.admin-top{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:25px;
+}
+
+.admin-top h2{
+
+    color:#16213E;
+    margin:0;
+}
+
+.admin-top p{
+
+    color:#777;
+    margin-top:8px;
+}
+
+.admin-add-btn{
+
+    background:#198754;
+
+    color:white;
+
+    text-decoration:none;
+
+    padding:14px 22px;
+
+    border-radius:12px;
+
+    font-weight:600;
+
+    transition:.3s;
+}
+
+.admin-add-btn:hover{
+
+    background:#157347;
+}
+
+.admin-card-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:20px;
+}
+
+.admin-card{
+
+    background:#f8f9fa;
+
+    text-align:center;
+
+    border-radius:14px;
+
+    padding:22px;
+}
+
+.admin-card h3{
+
+    font-size:34px;
+
+    margin-bottom:8px;
+
+    color:#16213E;
+}
+
+.admin-card span{
+
+    color:#666;
+}
