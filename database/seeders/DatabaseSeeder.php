@@ -73,7 +73,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'nomor_kamar' => '301',
-                'tipe_kamar' => 'Suite Room',
+                'tipe_kamar' => 'VIP Room',
                 'harga_per_malam' => 1200000,
                 'kapasitas' => 4,
                 'deskripsi' => 'Kamar Suite mewah yang memiliki ruang tamu terpisah (living room). Sangat cocok untuk keluarga. Fasilitas termasuk super king bed, AC di setiap ruangan, TV pintar 50 inci, minibar lengkap, microwave, mesin kopi, sofa bed, dan kamar mandi mewah dengan bathub dan shower terpisah.',
@@ -82,7 +82,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'nomor_kamar' => '302',
-                'tipe_kamar' => 'Suite Room',
+                'tipe_kamar' => 'VIP Room',
                 'harga_per_malam' => 1200000,
                 'kapasitas' => 4,
                 'deskripsi' => 'Suite Room bertipe presidential suite junior dengan pemandangan pegunungan yang menawan. Lengkap dengan area santai keluarga, balkon pribadi, fasilitas pembuat kopi espresso, kulkas besar, shower modern, bathub mewah, dan perlengkapan mandi eksklusif.',
