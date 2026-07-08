@@ -107,42 +107,6 @@
                                 <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80" alt="Default Room Image" class="room-img">
                             @endif
                         </a>
-                        
-                        @auth
-
-@if(Auth::user()->role == 'admin')
-
-<a href="#" class="room-book-btn">
-    Edit
-</a>
-
-@else
-
-    @if($room->status === 'tersedia')
-        <a href="{{ url('/reservasi/pesan/'.$room->id) }}" class="room-book-btn">
-            Pesan
-        </a>
-    @else
-        <a href="#" class="room-book-btn disabled" tabindex="-1">
-            Pesan
-        </a>
-    @endif
-
-@endif
-
-@else
-
-@if($room->status === 'tersedia')
-    <a href="{{ url('/login') }}" class="room-book-btn">
-        Pesan
-    </a>
-@else
-    <a href="#" class="room-book-btn disabled">
-        Pesan
-    </a>
-@endif
-
-@endauth
                     </div>
                     
                     <div class="room-details">
@@ -167,13 +131,8 @@
                                 <span style="font-size: 0.8rem; color: var(--text-muted);">/ malam</span>
                             </div>
                             
-                            <div class="room-actions" style="display: flex; gap: 8px;">
-                                <a href="{{ route('rooms.show', $room->id) }}" class="room-detail-btn">Detail</a>
-                                @if($room->status === 'tersedia')
-                                    <a href="{{ url('/reservasi/pesan/'.$room->id) }}" class="room-book-btn">Pesan</a>
-                                @else
-                                    <a href="#" class="room-book-btn disabled" tabindex="-1">Pesan</a>
-                                @endif
+                            <div class="room-actions">
+                                <a href="{{ route('rooms.show',$room->id) }}" class="room-detail-btn">Detail</a>
                             </div>
                         </div>
                     </div>

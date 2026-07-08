@@ -208,6 +208,19 @@
                     <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
                     Kembali ke Daftar Kamar
                 </a>
+
+                @auth
+                    @if(Auth::user()->role == 'admin')
+                        <div class="divider"></div>
+                        <div class="admin-actions">
+                            <a href="{{ route('rooms.edit', $room->id) }}" class="sidebar-edit-btn">Edit Kamar</a>
+                            <form action="{{ route('rooms.delete', $room->id) }}" method="POST" style="display:inline-block; margin-left:8px;" onsubmit="return confirm('Yakin ingin menghapus Kamar No. {{ $room->nomor_kamar }}?');">
+                                @csrf
+                                <button type="submit" class="sidebar-delete-btn">Hapus Kamar</button>
+                            </form>
+                        </div>
+                    @endif
+                @endauth
             </div>
         </div>
     </div>

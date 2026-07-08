@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Http\Controllers\AuthController;
 
@@ -35,4 +37,47 @@ Route::get('/reservasi/pesan/{id}', function ($id) {
     $room = Room::findOrFail($id);
     return redirect('/reservasi_hotel')->with('success', 'Kamar No. ' . $room->nomor_kamar . ' (' . $room->tipe_kamar . ') berhasil dipilih! Fitur pengisian data pesanan segera hadir.');
 })->name('reservasi.pesan');
+
+
+// Admin: Edit, Update, Delete Kamar (basic closures)
+Route::get('/reservasi_hotel/kamar/{id}/edit', function ($id) {
+    if (!Auth::check() || Auth::user()->role !== 'admin') {
+        abort(403);
+    }
+
+    $room = Room::findOrFail($id);
+    return view('rooms.edit', compact('room'));
+})->name('rooms.edit');
+
+Route::post('/reservasi_hotel/kamar/{id}/update', function (Request $request, $id) {
+    if (!Auth::check() || Auth::user()->role !== 'admin') {
+        abort(403);
+    }
+
+    $room = Room::findOrFail($id);
+
+    $data = $request->validate([
+        'tipe_kamar' => 'required|string|max:255',
+        'nomor_kamar' => 'required|string|max:100',
+        'kapasitas' => 'required|integer|min:1',
+        'harga_per_malam' => 'required|numeric|min:0',
+        'status' => 'required|in:tersedia,perbaikan',
+        'deskripsi' => 'nullable|string',
+    ]);
+
+    $room->update($data);
+
+    return redirect()->route('rooms.show', $room->id)->with('success', 'Data kamar berhasil diperbarui.');
+})->name('rooms.update');
+
+Route::post('/reservasi_hotel/kamar/{id}/delete', function ($id) {
+    if (!Auth::check() || Auth::user()->role !== 'admin') {
+        abort(403);
+    }
+
+    $room = Room::findOrFail($id);
+    $room->delete();
+
+    return redirect('/reservasi_hotel')->with('success', 'Kamar berhasil dihapus.');
+})->name('rooms.delete');
 
