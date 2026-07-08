@@ -55,14 +55,7 @@
             <p>Kelola seluruh data kamar hotel.</p>
         </div>
 
-        <a href="#" class="admin-add-btn">
-            + Tambah Kamar
-        </a>
-
-    </div>
-
-    <div class="admin-card-grid">
-
+        <a href="{{ route('rooms.create') }}" class="admin-add-btn">
         <div class="admin-card">
             <h3>{{ $rooms->count() }}</h3>
             <span>Total Kamar</span>
@@ -76,6 +69,11 @@
         <div class="admin-card">
             <h3>{{ $rooms->where('status','perbaikan')->count() }}</h3>
             <span>Perbaikan</span>
+        </div>
+
+        <div class="admin-card">
+            <h3>{{ $rooms->where('status','penuh')->count() }}</h3>
+            <span>Penuh</span>
         </div>
 
         <div class="admin-card">

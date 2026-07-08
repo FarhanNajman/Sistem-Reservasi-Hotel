@@ -6,19 +6,51 @@
 @php
     $floorPlan = null;
     $gallery = [];
-    if ($room->tipe_kamar === 'Standard Room') {
-        if ($room->nomor_kamar === '101') {
-            $floorPlan = 'gambar/kamar/standard/denah1.webp';
-        } elseif ($room->nomor_kamar === '102') {
-            $floorPlan = 'gambar/kamar/standard/denah2.jpg';
-        } elseif ($room->nomor_kamar === '103') {
-            $floorPlan = 'gambar/kamar/standard/denah3.jpg';
-        }
-        $gallery = [
-            'gambar/kamar/standard/standard1.jpg',
-            'gambar/kamar/standard/standard2.jpg',
-            'gambar/kamar/standard/standard3.jpg'
-        ];
+    $galleryTitle = 'Galeri Kamar';
+    $mainImage = $room->foto_kamar ? (filter_var($room->foto_kamar, FILTER_VALIDATE_URL) ? $room->foto_kamar : asset($room->foto_kamar)) : 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80';
+
+    switch ($room->tipe_kamar) {
+        case 'Standard Room':
+            $galleryTitle = 'Galeri Kamar Standard';
+            if ($room->nomor_kamar === '101') {
+                $floorPlan = 'gambar/kamar/standard/denah1.webp';
+            } elseif ($room->nomor_kamar === '102') {
+                $floorPlan = 'gambar/kamar/standard/denah2.jpg';
+            } elseif ($room->nomor_kamar === '103') {
+                $floorPlan = 'gambar/kamar/standard/denah3.jpg';
+            }
+            $gallery = [
+                'gambar/kamar/standard/standard1.jpg',
+                'gambar/kamar/standard/standard2.jpg',
+                'gambar/kamar/standard/standard3.jpg',
+            ];
+            break;
+        case 'Deluxe Room':
+            $galleryTitle = 'Galeri Kamar Deluxe';
+            $gallery = [
+                'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80',
+            ];
+            break;
+        case 'VIP Room':
+            $galleryTitle = 'Galeri Kamar VIP';
+            $gallery = [
+                'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=900&q=80',
+            ];
+            break;
+        default:
+            if ($room->foto_kamar) {
+                $gallery = [$room->foto_kamar];
+            }
+    }
+
+    if (!empty($gallery)) {
+        $gallery = array_map(function ($img) {
+            return filter_var($img, FILTER_VALIDATE_URL) ? $img : asset($img);
+        }, $gallery);
     }
 @endphp
 
@@ -38,27 +70,35 @@
         <div class="detail-main">
             <!-- Main Room Image -->
             <div class="detail-hero-card">
-                @if($room->foto_kamar)
-                    <img id="mainRoomImage" src="{{ asset($room->foto_kamar) }}" alt="{{ $room->tipe_kamar }}" class="detail-hero-img">
-                @else
-                    <img id="mainRoomImage" src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80" alt="Default Room Image" class="detail-hero-img">
-                @endif
+                <img id="mainRoomImage" src="{{ $mainImage }}" alt="{{ $room->tipe_kamar }}" class="detail-hero-img">
                 
                 @if($room->status === 'tersedia')
                     <span class="room-badge tersedia">Tersedia</span>
+                @elseif($room->status === 'penuh')
+                    <span class="room-badge penuh">Penuh</span>
                 @else
                     <span class="room-badge perbaikan">Dalam Perbaikan</span>
                 @endif
             </div>
 
-            <!-- Gallery Thumbnails (Only for Standard Rooms) -->
+            @if(auth()->check() && auth()->user()->role === 'admin')
+                <div class="detail-admin-actions">
+                    <a href="{{ route('rooms.edit', $room->id) }}" class="detail-admin-btn">Edit Kamar</a>
+                    <form action="{{ route('rooms.delete', $room->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus Kamar No. {{ $room->nomor_kamar }}?');">
+                        @csrf
+                        <button type="submit" class="detail-admin-delete-btn">Hapus Kamar</button>
+                    </form>
+                </div>
+            @endif
+
+            <!-- Gallery Thumbnails -->
             @if(count($gallery) > 0)
                 <div class="detail-gallery-section">
-                    <h4 class="section-subtitle">Galeri Kamar Standard</h4>
+                    <h4 class="section-subtitle">{{ $galleryTitle }}</h4>
                     <div class="detail-gallery-grid">
                         @foreach($gallery as $img)
-                            <div class="gallery-thumb {{ asset($img) == asset($room->foto_kamar) ? 'active' : '' }}" onclick="changeMainImage('{{ asset($img) }}', this)">
-                                <img src="{{ asset($img) }}" alt="Standard Room Thumbnail">
+                            <div class="gallery-thumb {{ $img === $mainImage ? 'active' : '' }}" onclick="changeMainImage('{{ $img }}', this)">
+                                <img src="{{ $img }}" alt="Gallery Thumbnail">
                             </div>
                         @endforeach
                     </div>
@@ -166,6 +206,8 @@
                         <span class="feature-label">Status Kamar</span>
                         @if($room->status === 'tersedia')
                             <span class="status-badge-inline tersedia">Tersedia untuk Dipesan</span>
+                        @elseif($room->status === 'penuh')
+                            <span class="status-badge-inline penuh">Kamar Penuh</span>
                         @else
                             <span class="status-badge-inline perbaikan">Sedang Dipelihara</span>
                         @endif
@@ -197,6 +239,11 @@
                         <i data-lucide="calendar-check" style="width: 18px; height: 18px;"></i>
                         Pesan Kamar Sekarang
                     </a>
+                @elseif($room->status === 'penuh')
+                    <button class="sidebar-book-btn disabled" disabled>
+                        <i data-lucide="user-x" style="width: 18px; height: 18px;"></i>
+                        Kamar Penuh
+                    </button>
                 @else
                     <button class="sidebar-book-btn disabled" disabled>
                         <i data-lucide="alert-triangle" style="width: 18px; height: 18px;"></i>
@@ -210,13 +257,13 @@
                 </a>
 
                 @auth
-                    @if(Auth::user()->role == 'admin')
+                    @if(Auth::user()->role === 'admin')
                         <div class="divider"></div>
                         <div class="admin-actions">
-                            <a href="{{ route('rooms.edit', $room->id) }}" class="sidebar-edit-btn">Edit Kamar</a>
-                            <form action="{{ route('rooms.delete', $room->id) }}" method="POST" style="display:inline-block; margin-left:8px;" onsubmit="return confirm('Yakin ingin menghapus Kamar No. {{ $room->nomor_kamar }}?');">
+                            <a href="{{ route('rooms.edit', $room->id) }}" class="sidebar-edit-btn">Edit</a>
+                            <form action="{{ route('rooms.delete', $room->id) }}" method="POST" style="display:inline-flex; gap:8px;" onsubmit="return confirm('Yakin ingin menghapus Kamar No. {{ $room->nomor_kamar }}?');">
                                 @csrf
-                                <button type="submit" class="sidebar-delete-btn">Hapus Kamar</button>
+                                <button type="submit" class="sidebar-delete-btn">Hapus</button>
                             </form>
                         </div>
                     @endif

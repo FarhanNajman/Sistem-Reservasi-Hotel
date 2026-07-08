@@ -396,6 +396,10 @@ a {
     background-color: #ef4444;
 }
 
+.room-badge.penuh {
+    background-color: #f59e0b;
+}
+
 .room-details {
     padding: 24px;
     flex-grow: 1;
@@ -924,32 +928,48 @@ a {
 }
 
 /* Admin actions in room detail sidebar */
-.admin-actions {
+.admin-actions,
+.detail-admin-actions {
     display: flex;
-    gap: 8px;
-    margin-top: 12px;
+    gap: 10px;
+    margin-top: 18px;
+    flex-wrap: wrap;
 }
 
 .sidebar-edit-btn,
-.sidebar-delete-btn {
-    display: inline-block;
-    padding: 8px 12px;
-    border-radius: 8px;
+.sidebar-delete-btn,
+.detail-admin-btn,
+.detail-admin-delete-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    border-radius: 10px;
     font-weight: 600;
     text-decoration: none;
     border: 1px solid transparent;
     cursor: pointer;
+    transition: all 0.25s ease;
 }
 
-.sidebar-edit-btn {
+.sidebar-edit-btn,
+.detail-admin-btn {
     background: var(--secondary-color);
     color: var(--text-light);
 }
 
-.sidebar-delete-btn {
+.sidebar-delete-btn,
+.detail-admin-delete-btn {
     background: transparent;
     color: var(--danger, #c53030);
-    border: 1px solid rgba(197,48,48,0.12);
+    border: 1px solid rgba(197,48,48,0.18);
+}
+
+.sidebar-delete-btn:hover,
+.detail-admin-delete-btn:hover,
+.sidebar-edit-btn:hover,
+.detail-admin-btn:hover {
+    transform: translateY(-1px);
 }
 
 /* Room Detail Page Styles */
@@ -1336,6 +1356,11 @@ a {
 .status-badge-inline.tersedia {
     background-color: #d1fae5;
     color: #065f46;
+}
+
+.status-badge-inline.penuh {
+    background-color: #ffedd5;
+    color: #c2410c;
 }
 
 .status-badge-inline.perbaikan {

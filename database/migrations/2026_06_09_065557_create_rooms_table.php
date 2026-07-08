@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('kapasitas');
             $table->text('deskripsi')->nullable();
             $table->string('foto_kamar')->nullable();
-            $table->string('status')->default('tersedia'); // tersedia, perbaikan
+            $table->string('status')->default('tersedia'); // tersedia, perbaikan, penuh
             $table->timestamps();
         });
     }
