@@ -46,16 +46,22 @@
 @auth
 @if(Auth::user()->role == 'admin')
 
-<div class="admin-dashboard">
+<section class="section">
+    <div class="admin-dashboard">
 
-    <div class="admin-top">
+        <div class="admin-top">
 
-        <div>
-            <h2>Dashboard Admin</h2>
-            <p>Kelola seluruh data kamar hotel.</p>
+            <div>
+                <h2>Dashboard Admin</h2>
+                <p>Kelola seluruh data kamar hotel.</p>
+            </div>
+
+            <a href="{{ route('rooms.create') }}" class="admin-add-btn">+ Tambah Kamar</a>
+
         </div>
 
-        <a href="{{ route('rooms.create') }}" class="admin-add-btn">
+        <div class="admin-card-grid">
+
         <div class="admin-card">
             <h3>{{ $rooms->count() }}</h3>
             <span>Total Kamar</span>
@@ -83,7 +89,8 @@
 
     </div>
 
-</div>
+    </div>
+</section>
 
 @endif
 @endauth
