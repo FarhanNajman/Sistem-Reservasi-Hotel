@@ -21,6 +21,7 @@ Route::prefix('reservasi_hotel')->group(function () {
     })->name('rooms.show');
 });
 
+
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
