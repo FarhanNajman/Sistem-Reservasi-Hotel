@@ -26,19 +26,49 @@
                 <a href="{{ url('/reservasi/lacak') }}">Lacak Reservasi</a>
             </li>
             @auth
-                <li class="nav-item" style="color: var(--text-muted); font-weight: 500; display: flex; align-items: center; gap: 6px;">
-                    <i data-lucide="user" style="width: 16px; color: var(--primary-color);"></i>
-                    <span>{{ Auth::user()->username }}</span>
-                </li>
-                <li class="nav-item">
-                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                        @csrf
-                        <button type="submit" class="nav-btn" style="border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px !important; margin-left: 10px;">
-                            <i data-lucide="log-out" style="width: 14px;"></i> Logout
-                        </button>
-                    </form>
-                </li>
-            @else
+
+    @if(Auth::user()->role == 'admin')
+
+        <li class="nav-item">
+            <a href="{{ url('/admin/dashboard') }}">Dashboard</a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ url('/admin/rooms') }}">Kelola Kamar</a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ url('/admin/reservations') }}">Reservasi</a>
+        </li>
+
+    @else
+
+        <li class="nav-item">
+            <a href="{{ url('/reservasi-saya') }}">Reservasi Saya</a>
+        </li>
+
+    @endif
+
+    <li class="nav-item" style="color: var(--text-muted); font-weight:500; display:flex; align-items:center; gap:6px;">
+        <i data-lucide="user" style="width:16px; color:var(--primary-color);"></i>
+
+        {{ Auth::user()->username }}
+
+        @if(Auth::user()->role == 'admin')
+            <span style="color:#d4af37;">(Admin)</span>
+        @endif
+    </li>
+
+    <li class="nav-item">
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit" class="nav-btn">
+                Logout
+            </button>
+        </form>
+    </li>
+
+@else
                 <li class="nav-item">
                     <a href="{{ url('/login') }}" class="nav-btn">Login</a>
                 </li>

@@ -43,7 +43,52 @@
             </form>
         </div>
     </div>
+@auth
+@if(Auth::user()->role == 'admin')
 
+<div class="admin-dashboard">
+
+    <div class="admin-top">
+
+        <div>
+            <h2>Dashboard Admin</h2>
+            <p>Kelola seluruh data kamar hotel.</p>
+        </div>
+
+        <a href="#" class="admin-add-btn">
+            + Tambah Kamar
+        </a>
+
+    </div>
+
+    <div class="admin-card-grid">
+
+        <div class="admin-card">
+            <h3>{{ $rooms->count() }}</h3>
+            <span>Total Kamar</span>
+        </div>
+
+        <div class="admin-card">
+            <h3>{{ $rooms->where('status','tersedia')->count() }}</h3>
+            <span>Tersedia</span>
+        </div>
+
+        <div class="admin-card">
+            <h3>{{ $rooms->where('status','perbaikan')->count() }}</h3>
+            <span>Perbaikan</span>
+        </div>
+
+        <div class="admin-card">
+            <h3>{{ $rooms->where('tipe_kamar','VIP Room')->count() }}</h3>
+            <span>VIP Room</span>
+        </div>
+
+    </div>
+
+</div>
+
+@endif
+@endauth
     <!-- Room List Section -->
     <section class="section">
         <div class="section-header">
@@ -63,11 +108,41 @@
                             @endif
                         </a>
                         
-                        @if($room->status === 'tersedia')
-                            <span class="room-badge tersedia">Tersedia</span>
-                        @else
-                            <span class="room-badge perbaikan">Dalam Perbaikan</span>
-                        @endif
+                        @auth
+
+@if(Auth::user()->role == 'admin')
+
+<a href="#" class="room-book-btn">
+    Edit
+</a>
+
+@else
+
+    @if($room->status === 'tersedia')
+        <a href="{{ url('/reservasi/pesan/'.$room->id) }}" class="room-book-btn">
+            Pesan
+        </a>
+    @else
+        <a href="#" class="room-book-btn disabled" tabindex="-1">
+            Pesan
+        </a>
+    @endif
+
+@endif
+
+@else
+
+@if($room->status === 'tersedia')
+    <a href="{{ url('/login') }}" class="room-book-btn">
+        Pesan
+    </a>
+@else
+    <a href="#" class="room-book-btn disabled">
+        Pesan
+    </a>
+@endif
+
+@endauth
                     </div>
                     
                     <div class="room-details">
