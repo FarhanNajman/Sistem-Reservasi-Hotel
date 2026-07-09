@@ -22,9 +22,7 @@
             <li class="nav-item {{ Request::is('/') ? 'active' : '' }}">
                 <a href="{{ url('/') }}">Beranda</a>
             </li>
-            <li class="nav-item {{ Request::is('reservasi/lacak') ? 'active' : '' }}">
-                <a href="{{ url('/reservasi/lacak') }}">Lacak Reservasi</a>
-            </li>
+            <!-- Lacak Reservasi removed -->
             @auth
 
     @if(Auth::user()->role == 'admin')
@@ -94,7 +92,7 @@
                 <h3>Info</h3>
                 <ul class="footer-links">
                     <li><a href="{{ url('/') }}">Beranda</a></li>
-                    <li><a href="{{ url('/reservasi/lacak') }}">Lacak Reservasi</a></li>
+                    <!-- Lacak Reservasi link removed -->
                     <li><a href="{{ url('/admin/login') }}">Login Administrasi</a></li>
                 </ul>
             </div>
