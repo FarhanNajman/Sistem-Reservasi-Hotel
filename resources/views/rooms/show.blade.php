@@ -5,52 +5,16 @@
 @section('content')
 @php
     $floorPlan = null;
-    $gallery = [];
-    $galleryTitle = 'Galeri Kamar';
     $mainImage = $room->foto_kamar ? (filter_var($room->foto_kamar, FILTER_VALIDATE_URL) ? $room->foto_kamar : asset($room->foto_kamar)) : 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80';
 
-    switch ($room->tipe_kamar) {
-        case 'Standard Room':
-            $galleryTitle = 'Galeri Kamar Standard';
-            if ($room->nomor_kamar === '101') {
-                $floorPlan = 'gambar/kamar/standard/denah1.webp';
-            } elseif ($room->nomor_kamar === '102') {
-                $floorPlan = 'gambar/kamar/standard/denah2.jpg';
-            } elseif ($room->nomor_kamar === '103') {
-                $floorPlan = 'gambar/kamar/standard/denah3.jpg';
-            }
-            $gallery = [
-                'gambar/kamar/standard/standard1.jpg',
-                'gambar/kamar/standard/standard2.jpg',
-                'gambar/kamar/standard/standard3.jpg',
-            ];
-            break;
-        case 'Deluxe Room':
-            $galleryTitle = 'Galeri Kamar Deluxe';
-            $gallery = [
-                'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=900&q=80',
-                'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=900&q=80',
-                'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80',
-            ];
-            break;
-        case 'VIP Room':
-            $galleryTitle = 'Galeri Kamar VIP';
-            $gallery = [
-                'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=900&q=80',
-                'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=900&q=80',
-                'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=900&q=80',
-            ];
-            break;
-        default:
-            if ($room->foto_kamar) {
-                $gallery = [$room->foto_kamar];
-            }
-    }
-
-    if (!empty($gallery)) {
-        $gallery = array_map(function ($img) {
-            return filter_var($img, FILTER_VALIDATE_URL) ? $img : asset($img);
-        }, $gallery);
+    if ($room->tipe_kamar === 'Standard Room') {
+        if ($room->nomor_kamar === '101') {
+            $floorPlan = 'gambar/kamar/standard/denah1.webp';
+        } elseif ($room->nomor_kamar === '102') {
+            $floorPlan = 'gambar/kamar/standard/denah2.jpg';
+        } elseif ($room->nomor_kamar === '103') {
+            $floorPlan = 'gambar/kamar/standard/denah3.jpg';
+        }
     }
 @endphp
 
@@ -80,30 +44,6 @@
                     <span class="room-badge perbaikan">Dalam Perbaikan</span>
                 @endif
             </div>
-
-            @if(auth()->check() && auth()->user()->role === 'admin')
-                <div class="detail-admin-actions">
-                    <a href="{{ route('rooms.edit', $room->id) }}" class="detail-admin-btn">Edit Kamar</a>
-                    <form action="{{ route('rooms.delete', $room->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus Kamar No. {{ $room->nomor_kamar }}?');">
-                        @csrf
-                        <button type="submit" class="detail-admin-delete-btn">Hapus Kamar</button>
-                    </form>
-                </div>
-            @endif
-
-            <!-- Gallery Thumbnails -->
-            @if(count($gallery) > 0)
-                <div class="detail-gallery-section">
-                    <h4 class="section-subtitle">{{ $galleryTitle }}</h4>
-                    <div class="detail-gallery-grid">
-                        @foreach($gallery as $img)
-                            <div class="gallery-thumb {{ $img === $mainImage ? 'active' : '' }}" onclick="changeMainImage('{{ $img }}', this)">
-                                <img src="{{ $img }}" alt="Gallery Thumbnail">
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            @endif
 
             <!-- Room Specifications & Facilities -->
             <div class="detail-info-card">
@@ -284,21 +224,6 @@
 
 @section('scripts')
 <script>
-    // Gallery switching function
-    function changeMainImage(imgUrl, thumbElement) {
-        document.getElementById('mainRoomImage').src = imgUrl;
-        
-        // Remove active class from all thumbs
-        const thumbs = document.querySelectorAll('.gallery-thumb');
-        thumbs.forEach(thumb => {
-            thumb.classList.remove('active');
-        });
-        
-        // Add active class to clicked thumb
-        thumbElement.classList.add('active');
-    }
-
-    // Lightbox functions
     function openLightbox(imgUrl) {
         const lightbox = document.getElementById('floorplanLightbox');
         const lightboxImg = document.getElementById('lightboxImage');

@@ -71,7 +71,6 @@
             <div class="form-group">
                 <label for="deskripsi">Deskripsi Kamar</label>
                 <textarea name="deskripsi" id="deskripsi" rows="6" placeholder="Tuliskan fitur utama kamar, suasana, dan pengalaman tamu. Contoh: 'Kamar Deluxe dengan balkon, AC, Wi-Fi cepat, dan pemandangan kota yang menawan.'">{{ old('deskripsi', $room->deskripsi) }}</textarea>
-                <p style="margin-top: 6px; color: #6b7280; font-size: 0.95rem;">Gunakan deskripsi singkat dan menarik agar tamu bisa melihat nilai lebih kamar ini.</p>
             </div>
 
             <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 16px;">

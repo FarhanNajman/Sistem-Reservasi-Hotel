@@ -999,40 +999,48 @@ a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 10px 14px;
-    border-radius: 10px;
+    padding: 12px 22px;
+    border-radius: var(--radius-md);
     font-weight: 600;
+    font-size: 0.95rem;
     text-decoration: none;
     border: 1px solid transparent;
     cursor: pointer;
     transition: all 0.25s ease;
+    background-color: transparent;
 }
 
 .sidebar-edit-btn,
 .detail-admin-btn {
-    background: var(--secondary-color);
-    color: var(--text-light);
+    color: #78350f;
+    border-color: #fbbf24;
+}
+
+.sidebar-edit-btn:hover,
+.detail-admin-btn:hover {
+    background-color: #fef3c7;
+    color: #78350f;
+    transform: translateY(-1px);
 }
 
 .sidebar-delete-btn,
 .detail-admin-delete-btn {
-    background: transparent;
-    color: var(--danger, #c53030);
-    border: 1px solid rgba(197,48,48,0.18);
+    color: #9b2c2c;
+    border-color: rgba(220, 38, 38, 0.35);
 }
 
 .sidebar-delete-btn:hover,
-.detail-admin-delete-btn:hover,
-.sidebar-edit-btn:hover,
-.detail-admin-btn:hover {
+.detail-admin-delete-btn:hover {
+    background-color: #fee2e2;
+    color: #9b2c2c;
     transform: translateY(-1px);
 }
 
 /* Room Detail Page Styles */
 .detail-container {
-    max-width: 1200px;
-    margin: 40px auto 80px auto;
-    padding: 0 4%;
+    max-width: 1400px;
+    margin: 50px auto 90px auto;
+    padding: 0 5%;
 }
 
 /* Breadcrumbs */
@@ -1069,15 +1077,21 @@ a {
 /* Grid Layout */
 .detail-grid {
     display: grid;
-    grid-template-columns: 7fr 4fr;
-    gap: 40px;
+    grid-template-columns: 8fr 4fr;
+    gap: 48px;
     align-items: start;
 }
 
-@media (max-width: 992px) {
+@media (max-width: 1200px) {
     .detail-grid {
         grid-template-columns: 1fr;
-        gap: 30px;
+        gap: 36px;
+    }
+}
+
+@media (max-width: 768px) {
+    .detail-grid {
+        gap: 28px;
     }
 }
 
@@ -1467,22 +1481,25 @@ a {
 .sidebar-back-btn {
     border: 1px solid var(--border-color);
     background-color: transparent;
-    color: var(--text-muted);
+    color: var(--text-dark);
     border-radius: var(--radius-md);
-    padding: 10px 20px;
+    padding: 12px 20px;
     font-weight: 600;
-    font-size: 0.85rem;
-    display: flex;
+    font-size: 0.95rem;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    transition: all 0.3s ease;
+    gap: 8px;
+    transition: all 0.25s ease;
     text-decoration: none;
+    border: 1px solid var(--border-color);
 }
 
 .sidebar-back-btn:hover {
     background-color: var(--bg-light);
-    color: var(--secondary-color);
+    color: var(--text-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
 }
 
 /* Lightbox Modal */
