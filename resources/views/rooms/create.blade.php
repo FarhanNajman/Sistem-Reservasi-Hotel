@@ -62,8 +62,9 @@
             </div>
 
             <div class="form-group">
-                <label for="deskripsi">Deskripsi</label>
-                <textarea name="deskripsi" id="deskripsi" rows="4">{{ old('deskripsi') }}</textarea>
+                <label for="deskripsi">Deskripsi Kamar</label>
+                <textarea name="deskripsi" id="deskripsi" rows="6" placeholder="Tuliskan fitur utama kamar, suasana, dan pengalaman tamu. Contoh: 'Kamar Deluxe dengan balkon, AC, Wi-Fi cepat, dan pemandangan kota yang menawan.'">{{ old('deskripsi') }}</textarea>
+                <p style="margin-top: 6px; color: #6b7280; font-size: 0.95rem;">Ceritakan keunggulan kamar dalam 2-3 kalimat agar tamu mudah membayangkan penginapan.</p>
             </div>
 
             <button type="submit" class="btn-primary">Tambah Kamar</button>
