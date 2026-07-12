@@ -54,10 +54,19 @@
             <div class="form-group">
                 <label for="foto_kamar_upload">Unggah Foto Kamar</label>
                 <div class="file-upload-wrapper">
-                    <label for="foto_kamar_upload" class="file-upload-button">Pilih File</label>
+                    <label for="foto_kamar_upload" class="file-upload-button" title="Pilih gambar">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" role="img">
+                            <path fill="#0f172a" d="M5 20h14a2 2 0 002-2v-7h-2v7H5v-7H3v7a2 2 0 002 2Zm11-10l-3-3-3 3h2v4h2v-4h2Zm-6-6h6V2H10a2 2 0 0 0-2 2v4h2V4Zm8 3V4h1.5L17 7ZM9 7V4H7.5L9 7Z"/>
+                        </svg>
+                    </label>
                     <span class="file-upload-name" id="fotoKamarFileName">Tidak ada file dipilih</span>
+                    <button type="button" class="file-upload-clear" id="clearFotoKamarCreate" title="Batal pilih gambar">×</button>
                     <input type="file" name="foto_kamar_upload" id="foto_kamar_upload" accept="image/*">
                 </div>
+            </div>
+
+            <div class="preview-image-wrapper hidden">
+                <img src="" id="previewImage" alt="Preview Foto Kamar">
             </div>
 
             <div class="form-group">
@@ -66,7 +75,7 @@
                 <p style="margin-top: 6px; color: #6b7280; font-size: 0.95rem;">Ceritakan keunggulan kamar dalam 2-3 kalimat agar tamu mudah membayangkan penginapan.</p>
             </div>
 
-            <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 16px;">
+            <div class="form-actions">
                 <button type="submit" class="btn-primary">Tambah Kamar</button>
                 <a href="{{ url('/reservasi_hotel') }}" class="btn-secondary">Batal</a>
             </div>
@@ -78,11 +87,47 @@
 <script>
     const createFileInput = document.getElementById('foto_kamar_upload');
     const createFileNameDisplay = document.getElementById('fotoKamarFileName');
+    const createPreviewImage = document.getElementById('previewImage');
+    const createPreviewWrapper = document.querySelector('.preview-image-wrapper');
+    const createClearButton = document.getElementById('clearFotoKamarCreate');
 
-    if (createFileInput && createFileNameDisplay) {
-        createFileInput.addEventListener('change', function () {
-            const fileName = this.files.length > 0 ? this.files[0].name : 'Tidak ada file dipilih';
-            createFileNameDisplay.textContent = fileName;
+    function previewUpload(event, previewImage, fileNameDisplay, previewWrapper) {
+        const file = event.target.files[0];
+        if (!previewImage || !fileNameDisplay || !previewWrapper) return;
+
+        if (file) {
+            fileNameDisplay.textContent = file.name;
+            previewImage.src = URL.createObjectURL(file);
+            previewWrapper.classList.remove('hidden');
+            previewWrapper.classList.add('active');
+            previewImage.style.display = 'block';
+        } else {
+            clearUploadSelection(createFileInput, createPreviewWrapper, createPreviewImage, createFileNameDisplay);
+        }
+    }
+
+    function clearUploadSelection(fileInput, previewWrapper, previewImage, fileNameDisplay) {
+        if (fileInput) fileInput.value = '';
+        if (fileNameDisplay) fileNameDisplay.textContent = 'Tidak ada file dipilih';
+        if (previewImage) {
+            previewImage.src = '';
+            previewImage.style.display = 'none';
+        }
+        if (previewWrapper) {
+            previewWrapper.classList.add('hidden');
+            previewWrapper.classList.remove('active');
+        }
+    }
+
+    if (createFileInput && createFileNameDisplay && createPreviewImage && createPreviewWrapper) {
+        createFileInput.addEventListener('change', function (event) {
+            previewUpload(event, createPreviewImage, createFileNameDisplay, createPreviewWrapper);
+        });
+    }
+
+    if (createClearButton) {
+        createClearButton.addEventListener('click', function () {
+            clearUploadSelection(createFileInput, createPreviewWrapper, createPreviewImage, createFileNameDisplay);
         });
     }
 </script>
