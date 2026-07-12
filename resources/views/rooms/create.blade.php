@@ -67,8 +67,10 @@
                 <p style="margin-top: 6px; color: #6b7280; font-size: 0.95rem;">Ceritakan keunggulan kamar dalam 2-3 kalimat agar tamu mudah membayangkan penginapan.</p>
             </div>
 
-            <button type="submit" class="btn-primary">Tambah Kamar</button>
-            <a href="{{ url('/reservasi_hotel') }}" class="btn-link" style="margin-left:12px;">Batal</a>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 16px;">
+                <button type="submit" class="btn-primary">Tambah Kamar</button>
+                <a href="{{ url('/reservasi_hotel') }}" class="btn-secondary">Batal</a>
+            </div>
         </form>
     </div>
 </div>

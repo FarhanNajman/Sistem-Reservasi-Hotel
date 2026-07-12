@@ -74,8 +74,10 @@
                 <p style="margin-top: 6px; color: #6b7280; font-size: 0.95rem;">Gunakan deskripsi singkat dan menarik agar tamu bisa melihat nilai lebih kamar ini.</p>
             </div>
 
-            <button type="submit" class="btn-primary">Simpan Perubahan</button>
-            <a href="{{ route('rooms.show', $room->id) }}" class="btn-link" style="margin-left:12px;">Batal</a>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 16px;">
+                <button type="submit" class="btn-primary">Simpan Perubahan</button>
+                <a href="{{ route('rooms.show', $room->id) }}" class="btn-secondary">Batal</a>
+            </div>
         </form>
     </div>
 </div>
