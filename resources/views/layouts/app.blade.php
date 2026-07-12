@@ -88,15 +88,6 @@
                 <p><i data-lucide="map-pin" style="display:inline; width:16px; margin-right:5px; vertical-align:middle;"></i> Jl. Kapalo Koto, Pauh, Padang</p>
             </div>
             
-            <div class="footer-col">
-                <h3>Info</h3>
-                <ul class="footer-links">
-                    <li><a href="{{ url('/') }}">Beranda</a></li>
-                    <!-- Lacak Reservasi link removed -->
-                    <li><a href="{{ url('/admin/login') }}">Login Administrasi</a></li>
-                </ul>
-            </div>
-            
             <div class="footer-col footer-contact">
                 <h3>Hubungi Kami</h3>
                 <p><i data-lucide="phone" style="width:16px;"></i> +6281372747968</p>
