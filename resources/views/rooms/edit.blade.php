@@ -53,18 +53,17 @@
 
             <div class="form-group">
                 <label for="foto_kamar_upload">Unggah Foto Kamar</label>
-                <input type="file" name="foto_kamar_upload" id="foto_kamar_upload" accept="image/*">
-            </div>
-
-            <div class="form-group">
-                <label for="foto_kamar">URL / Path Foto Kamar (opsional jika tidak mengunggah)</label>
-                <input type="text" name="foto_kamar" id="foto_kamar" value="{{ old('foto_kamar', $room->foto_kamar) }}" placeholder="Contoh: gambar/kamar/vip/vip1.jpg atau https://...">
+                <div class="file-upload-wrapper">
+                    <label for="foto_kamar_upload" class="file-upload-button">Pilih File</label>
+                    <span class="file-upload-name" id="fotoKamarFileName">Tidak ada file dipilih</span>
+                    <input type="file" name="foto_kamar_upload" id="foto_kamar_upload" accept="image/*">
+                </div>
             </div>
 
             @if($room->foto_kamar)
                 <div class="form-group">
                     <label>Preview Foto Saat Ini</label>
-                    <img src="{{ filter_var($room->foto_kamar, FILTER_VALIDATE_URL) ? $room->foto_kamar : asset($room->foto_kamar) }}" alt="Foto Kamar {{ $room->nomor_kamar }}" style="max-width: 100%; border-radius: 12px; margin-top: 10px; display: block;">
+                    <img src="{{ filter_var($room->foto_kamar, FILTER_VALIDATE_URL) ? $room->foto_kamar : asset($room->foto_kamar) }}" alt="Foto Kamar {{ $room->nomor_kamar }}" style="max-width: 320px; width: 100%; border-radius: 12px; margin-top: 10px; display: block; object-fit: cover;">
                 </div>
             @endif
 
@@ -80,4 +79,17 @@
         </form>
     </div>
 </div>
+
+@section('scripts')
+<script>
+    const fileInput = document.getElementById('foto_kamar_upload');
+    const fileNameDisplay = document.getElementById('fotoKamarFileName');
+
+    if (fileInput && fileNameDisplay) {
+        fileInput.addEventListener('change', function () {
+            const fileName = this.files.length > 0 ? this.files[0].name : 'Tidak ada file dipilih';
+            fileNameDisplay.textContent = fileName;
+        });
+    }
+</script>
 @endsection

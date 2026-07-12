@@ -53,12 +53,11 @@
 
             <div class="form-group">
                 <label for="foto_kamar_upload">Unggah Foto Kamar</label>
-                <input type="file" name="foto_kamar_upload" id="foto_kamar_upload" accept="image/*">
-            </div>
-
-            <div class="form-group">
-                <label for="foto_kamar">URL / Path Foto Kamar (opsional jika tidak mengunggah)</label>
-                <input type="text" name="foto_kamar" id="foto_kamar" value="{{ old('foto_kamar') }}" placeholder="Contoh: gambar/kamar/standard/standard1.jpg atau https://...">
+                <div class="file-upload-wrapper">
+                    <label for="foto_kamar_upload" class="file-upload-button">Pilih File</label>
+                    <span class="file-upload-name" id="fotoKamarFileName">Tidak ada file dipilih</span>
+                    <input type="file" name="foto_kamar_upload" id="foto_kamar_upload" accept="image/*">
+                </div>
             </div>
 
             <div class="form-group">
@@ -74,4 +73,17 @@
         </form>
     </div>
 </div>
+
+@section('scripts')
+<script>
+    const createFileInput = document.getElementById('foto_kamar_upload');
+    const createFileNameDisplay = document.getElementById('fotoKamarFileName');
+
+    if (createFileInput && createFileNameDisplay) {
+        createFileInput.addEventListener('change', function () {
+            const fileName = this.files.length > 0 ? this.files[0].name : 'Tidak ada file dipilih';
+            createFileNameDisplay.textContent = fileName;
+        });
+    }
+</script>
 @endsection
