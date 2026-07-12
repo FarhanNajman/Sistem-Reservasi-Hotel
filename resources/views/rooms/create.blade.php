@@ -20,7 +20,7 @@
             </div>
         @endif
 
-        <form action="{{ route('rooms.store') }}" method="POST">
+        <form action="{{ route('rooms.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label for="tipe_kamar">Tipe Kamar</label>
@@ -52,8 +52,13 @@
             </div>
 
             <div class="form-group">
-                <label for="foto_kamar">URL / Path Foto Kamar</label>
-                <input type="text" name="foto_kamar" id="foto_kamar" value="{{ old('foto_kamar') }}">
+                <label for="foto_kamar_upload">Unggah Foto Kamar</label>
+                <input type="file" name="foto_kamar_upload" id="foto_kamar_upload" accept="image/*">
+            </div>
+
+            <div class="form-group">
+                <label for="foto_kamar">URL / Path Foto Kamar (opsional jika tidak mengunggah)</label>
+                <input type="text" name="foto_kamar" id="foto_kamar" value="{{ old('foto_kamar') }}" placeholder="Contoh: gambar/kamar/standard/standard1.jpg atau https://...">
             </div>
 
             <div class="form-group">

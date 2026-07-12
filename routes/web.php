@@ -63,7 +63,7 @@ Route::post('/reservasi_hotel/kamar', function (Request $request) {
         abort(403);
     }
 
-    $data = $request->validate([
+    $validated = $request->validate([
         'tipe_kamar' => 'required|string|max:255',
         'nomor_kamar' => 'required|string|max:100|unique:rooms,nomor_kamar',
         'kapasitas' => 'required|integer|min:1',
@@ -71,9 +71,15 @@ Route::post('/reservasi_hotel/kamar', function (Request $request) {
         'status' => 'required|in:tersedia,penuh,perbaikan',
         'deskripsi' => 'nullable|string',
         'foto_kamar' => 'nullable|string',
+        'foto_kamar_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
     ]);
 
-    Room::create($data);
+    if ($request->hasFile('foto_kamar_upload')) {
+        $path = $request->file('foto_kamar_upload')->store('gambar/kamar', 'public');
+        $validated['foto_kamar'] = 'storage/' . $path;
+    }
+
+    Room::create($validated);
 
     return redirect('/reservasi_hotel')->with('success', 'Kamar baru berhasil ditambahkan.');
 })->name('rooms.store');
@@ -94,7 +100,7 @@ Route::post('/reservasi_hotel/kamar/{id}/update', function (Request $request, $i
 
     $room = Room::findOrFail($id);
 
-    $data = $request->validate([
+    $validated = $request->validate([
         'tipe_kamar' => 'required|string|max:255',
         'nomor_kamar' => 'required|string|max:100',
         'kapasitas' => 'required|integer|min:1',
@@ -102,9 +108,15 @@ Route::post('/reservasi_hotel/kamar/{id}/update', function (Request $request, $i
         'status' => 'required|in:tersedia,penuh,perbaikan',
         'deskripsi' => 'nullable|string',
         'foto_kamar' => 'nullable|string',
+        'foto_kamar_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
     ]);
 
-    $room->update($data);
+    if ($request->hasFile('foto_kamar_upload')) {
+        $path = $request->file('foto_kamar_upload')->store('gambar/kamar', 'public');
+        $validated['foto_kamar'] = 'storage/' . $path;
+    }
+
+    $room->update($validated);
 
     return redirect()->route('rooms.show', $room->id)->with('success', 'Data kamar berhasil diperbarui.');
 })->name('rooms.update');

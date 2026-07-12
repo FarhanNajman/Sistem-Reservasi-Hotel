@@ -20,7 +20,7 @@
             </div>
         @endif
 
-        <form action="{{ route('rooms.update', $room->id) }}" method="POST">
+        <form action="{{ route('rooms.update', $room->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label for="tipe_kamar">Tipe Kamar</label>
@@ -52,8 +52,25 @@
             </div>
 
             <div class="form-group">
+                <label for="foto_kamar_upload">Unggah Foto Kamar</label>
+                <input type="file" name="foto_kamar_upload" id="foto_kamar_upload" accept="image/*">
+            </div>
+
+            <div class="form-group">
+                <label for="foto_kamar">URL / Path Foto Kamar (opsional jika tidak mengunggah)</label>
+                <input type="text" name="foto_kamar" id="foto_kamar" value="{{ old('foto_kamar', $room->foto_kamar) }}" placeholder="Contoh: gambar/kamar/vip/vip1.jpg atau https://...">
+            </div>
+
+            @if($room->foto_kamar)
+                <div class="form-group">
+                    <label>Preview Foto Saat Ini</label>
+                    <img src="{{ filter_var($room->foto_kamar, FILTER_VALIDATE_URL) ? $room->foto_kamar : asset($room->foto_kamar) }}" alt="Foto Kamar {{ $room->nomor_kamar }}" style="max-width: 100%; border-radius: 12px; margin-top: 10px; display: block;">
+                </div>
+            @endif
+
+            <div class="form-group">
                 <label for="deskripsi">Deskripsi</label>
-                <textarea name="deskripsi" id="deskripsi" rows="4">{{ old('deskripsi', $room->deskripsi) }}</textarea>
+                <textarea name="deskripsi" id="deskripsi" rows="6">{{ old('deskripsi', $room->deskripsi) }}</textarea>
             </div>
 
             <button type="submit" class="btn-primary">Simpan Perubahan</button>
