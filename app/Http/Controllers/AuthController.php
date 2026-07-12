@@ -41,7 +41,11 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('/reservasi_hotel')
+            $redirectUrl = Auth::user()->role === 'admin'
+                ? route('admin.dashboard')
+                : '/reservasi_hotel';
+
+            return redirect()->intended($redirectUrl)
                 ->with('success', 'Selamat datang kembali, ' . Auth::user()->username . '!');
         }
 

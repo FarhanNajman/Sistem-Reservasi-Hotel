@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Room;
+use App\Models\Reservation;
 use App\Http\Controllers\AuthController;
 
 // Redirect root to /reservasi_hotel
@@ -21,6 +22,14 @@ Route::prefix('reservasi_hotel')->group(function () {
     })->name('rooms.show');
 });
 
+Route::middleware('role:admin')->group(function () {
+    Route::get('/admin/dashboard', function () {
+        $rooms = Room::all();
+        $reservations = Reservation::all();
+
+        return view('admin.dashboard', compact('rooms', 'reservations'));
+    })->name('admin.dashboard');
+});
 
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

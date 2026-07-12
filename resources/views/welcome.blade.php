@@ -43,57 +43,6 @@
             </form>
         </div>
     </div>
-@auth
-@if(Auth::user()->role == 'admin')
-
-<section class="section">
-    <div class="admin-dashboard">
-
-        <div class="admin-top">
-
-            <div>
-                <h2>Dashboard Admin</h2>
-                <p>Kelola seluruh data kamar hotel.</p>
-            </div>
-
-            <a href="{{ route('rooms.create') }}" class="admin-add-btn">+ Tambah Kamar</a>
-
-        </div>
-
-        <div class="admin-card-grid">
-
-        <div class="admin-card">
-            <h3>{{ $rooms->count() }}</h3>
-            <span>Total Kamar</span>
-        </div>
-
-        <div class="admin-card">
-            <h3>{{ $rooms->where('status','tersedia')->count() }}</h3>
-            <span>Tersedia</span>
-        </div>
-
-        <div class="admin-card">
-            <h3>{{ $rooms->where('status','perbaikan')->count() }}</h3>
-            <span>Perbaikan</span>
-        </div>
-
-        <div class="admin-card">
-            <h3>{{ $rooms->where('status','penuh')->count() }}</h3>
-            <span>Penuh</span>
-        </div>
-
-        <div class="admin-card">
-            <h3>{{ $rooms->where('tipe_kamar','VIP Room')->count() }}</h3>
-            <span>VIP Room</span>
-        </div>
-
-    </div>
-
-    </div>
-</section>
-
-@endif
-@endauth
     <!-- Room List Section -->
     <section class="section">
         <div class="section-header">

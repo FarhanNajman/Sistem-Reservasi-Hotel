@@ -19,24 +19,16 @@
         </a>
         
         <ul class="nav-links">
-            <li class="nav-item {{ Request::is('/') ? 'active' : '' }}">
-                <a href="{{ url('/') }}">Beranda</a>
+            <li class="nav-item {{ Request::is('reservasi_hotel*') ? 'active' : '' }}">
+                <a href="{{ url('/reservasi_hotel') }}">Beranda</a>
             </li>
             <!-- Lacak Reservasi removed -->
             @auth
 
     @if(Auth::user()->role == 'admin')
 
-        <li class="nav-item">
-            <a href="{{ url('/admin/dashboard') }}">Dashboard</a>
-        </li>
-
-        <li class="nav-item">
-            <a href="{{ url('/admin/rooms') }}">Kelola Kamar</a>
-        </li>
-
-        <li class="nav-item">
-            <a href="{{ url('/admin/reservations') }}">Reservasi</a>
+        <li class="nav-item {{ Request::is('admin/dashboard') ? 'active' : '' }}">
+            <a href="{{ route('admin.dashboard') }}">Dashboard</a>
         </li>
 
     @else
