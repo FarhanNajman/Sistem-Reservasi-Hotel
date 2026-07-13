@@ -17,8 +17,10 @@ Route::prefix('reservasi_hotel')->group(function () {
     Route::get('/', function () {
         $rooms = Room::all();
         $latestRooms = Room::orderBy('created_at', 'desc')->take(3)->get();
+        $roomTypes = Room::select('tipe_kamar')->distinct()->pluck('tipe_kamar');
+        $roomFloors = Room::select('lantai')->distinct()->orderBy('lantai')->pluck('lantai');
         $isSearch = false;
-        return view('welcome', compact('rooms', 'latestRooms', 'isSearch'));
+        return view('welcome', compact('rooms', 'latestRooms', 'roomTypes', 'roomFloors', 'isSearch'));
     });
 
     Route::get('/kamar-terbaru', function () {
@@ -40,25 +42,27 @@ Route::prefix('reservasi_hotel')->group(function () {
 });
 
 Route::get('/reservasi/cari', function (Request $request) {
-    $checkIn = $request->input('check_in', date('Y-m-d'));
-    $checkOut = $request->input('check_out', date('Y-m-d', strtotime('+1 day')));
     $tamu = $request->input('tamu', 2);
+    $tipeKamar = $request->input('tipe_kamar');
+    $lantai = $request->input('lantai');
 
-    $query = Room::where('kapasitas', '>=', $tamu)
+    $query = Room::where('kapasitas', $tamu)
                  ->where('status', '!=', 'perbaikan'); // Jangan tampilkan yang perbaikan
 
-    if ($checkIn && $checkOut) {
-        $query->whereDoesntHave('reservations', function ($q) use ($checkIn, $checkOut) {
-            $q->where('tanggal_check_in', '<', $checkOut)
-              ->where('tanggal_check_out', '>', $checkIn)
-              ->whereIn('status', ['pending', 'dikonfirmasi']);
-        });
+    if ($tipeKamar) {
+        $query->where('tipe_kamar', $tipeKamar);
+    }
+
+    if ($lantai) {
+        $query->where('lantai', $lantai);
     }
 
     $rooms = $query->get();
     $latestRooms = collect(); // Kosongkan pada saat pencarian
+    $roomTypes = Room::select('tipe_kamar')->distinct()->pluck('tipe_kamar');
+    $roomFloors = Room::select('lantai')->distinct()->orderBy('lantai')->pluck('lantai');
     $isSearch = true;
-    return view('welcome', compact('rooms', 'latestRooms', 'isSearch'));
+    return view('welcome', compact('rooms', 'latestRooms', 'roomTypes', 'roomFloors', 'isSearch'));
 });
  
 Route::middleware('role:admin')->group(function () {

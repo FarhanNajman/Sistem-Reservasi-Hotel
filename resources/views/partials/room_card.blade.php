@@ -40,7 +40,7 @@
             </div>
             
             <div class="room-actions">
-                <a href="{{ route('rooms.show',$room->id) }}" class="room-detail-btn">Detail</a>
+                <a href="{{ route('rooms.show',$room->id) }}" class="room-detail-btn">Pesan Sekarang</a>
             </div>
         </div>
     </div>

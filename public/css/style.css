@@ -229,8 +229,9 @@ a {
 
 .search-form {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 1fr 1fr 1fr auto;
     gap: 15px;
+    align-items: end; /* pastikan button sejajar dengan input form */
 }
 
 @media (max-width: 768px) {
@@ -1078,10 +1079,10 @@ a {
 }
 
 .room-detail-btn {
-    border: 1.5px solid var(--primary-color);
-    color: var(--primary-color);
-    background: transparent;
-    padding: 10px 22px; /* sedikit diperlebar */
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    border: none;
+    padding: 10px 22px;
     min-width: 120px;
     text-align: center;
     border-radius: var(--radius-md);
@@ -1096,7 +1097,7 @@ a {
 
 .room-detail-btn:hover {
     background-color: var(--primary-color);
-    color: var(--text-light) !important;
+    color: var(--text-light);
     box-shadow: var(--shadow-sm);
     transform: translateY(-1px);
 }
@@ -1117,7 +1118,7 @@ a {
 }
 
 .btn-primary {
-    background-color: var(--primary-color);
+    background-color: var(--bg-dark);
     color: var(--text-light);
     border: 1px solid transparent;
 }
@@ -1125,7 +1126,7 @@ a {
 .btn-primary:hover {
     transform: translateY(-1px);
     box-shadow: var(--shadow-sm);
-    background-color: #0f766e;
+    background-color: var(--primary-color);
 }
 
 .btn-secondary {
