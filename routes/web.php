@@ -29,12 +29,53 @@ Route::prefix('reservasi_hotel')->group(function () {
         return view('rooms.index', compact('rooms', 'title'));
     })->name('rooms.terbaru');
 
-    Route::get('/semua-kamar', function () {
-        $rooms = Room::all();
-        $title = 'Semua Kamar';
+    Route::get('/semua-kamar', function (Request $request) {
+        $checkIn = $request->input('check_in');
+        $checkOut = $request->input('check_out');
+        $tamu = $request->input('tamu');
+        $tipeKamar = $request->input('tipe_kamar');
+        $lantai = $request->input('lantai');
+
+        $query = Room::where('status', '!=', 'perbaikan');
+
+        if ($tamu) {
+            $query->where('kapasitas', $tamu);
+        }
+
+        if ($tipeKamar) {
+            $query->where('tipe_kamar', $tipeKamar);
+        }
+
+        if ($lantai) {
+            $query->where('lantai', $lantai);
+        }
+
+        $rooms = $query->get();
+        $isSearch = false;
+
+        if ($checkIn && $checkOut) {
+            $isSearch = true;
+            foreach ($rooms as $room) {
+                // Cek apakah ada reservasi yang tumpang tindih
+                $isBooked = $room->reservations()
+                    ->where('tanggal_check_in', '<', $checkOut)
+                    ->where('tanggal_check_out', '>', $checkIn)
+                    ->whereIn('status', ['pending', 'dikonfirmasi', 'check_in'])
+                    ->exists();
+                    
+                if ($isBooked) {
+                    $room->status = 'penuh';
+                } else {
+                    $room->status = 'tersedia';
+                }
+            }
+        }
+
+        $title = ($tamu || $tipeKamar || $lantai || ($checkIn && $checkOut)) ? 'Hasil Pencarian Kamar' : 'Semua Kamar';
         $roomTypes = Room::select('tipe_kamar')->distinct()->pluck('tipe_kamar');
         $roomFloors = Room::select('lantai')->distinct()->orderBy('lantai')->pluck('lantai');
-        return view('rooms.index', compact('rooms', 'title', 'roomTypes', 'roomFloors'));
+        
+        return view('rooms.index', compact('rooms', 'title', 'roomTypes', 'roomFloors', 'isSearch'));
     })->name('rooms.semua');
 
     Route::get('/kamar/{id}', function ($id) {
@@ -43,49 +84,6 @@ Route::prefix('reservasi_hotel')->group(function () {
     })->name('rooms.show')->where('id', '[0-9]+');
 });
 
-Route::get('/reservasi/cari', function (Request $request) {
-    $checkIn = $request->input('check_in', date('Y-m-d'));
-    $checkOut = $request->input('check_out', date('Y-m-d', strtotime('+1 day')));
-    $tamu = $request->input('tamu', 2);
-    $tipeKamar = $request->input('tipe_kamar');
-    $lantai = $request->input('lantai');
-
-    $query = Room::where('kapasitas', $tamu)
-                 ->where('status', '!=', 'perbaikan'); // Jangan tampilkan yang perbaikan
-
-    if ($tipeKamar) {
-        $query->where('tipe_kamar', $tipeKamar);
-    }
-
-    if ($lantai) {
-        $query->where('lantai', $lantai);
-    }
-
-    $rooms = $query->get();
-
-    if ($checkIn && $checkOut) {
-        foreach ($rooms as $room) {
-            // Cek apakah ada reservasi yang tumpang tindih
-            $isBooked = $room->reservations()
-                ->where('tanggal_check_in', '<', $checkOut)
-                ->where('tanggal_check_out', '>', $checkIn)
-                ->whereIn('status', ['pending', 'dikonfirmasi', 'check_in'])
-                ->exists();
-                
-            if ($isBooked) {
-                $room->status = 'penuh';
-            } else {
-                $room->status = 'tersedia';
-            }
-        }
-    }
-    $latestRooms = collect(); // Kosongkan pada saat pencarian
-    $roomTypes = Room::select('tipe_kamar')->distinct()->pluck('tipe_kamar');
-    $roomFloors = Room::select('lantai')->distinct()->orderBy('lantai')->pluck('lantai');
-    $isSearch = true;
-    return view('welcome', compact('rooms', 'latestRooms', 'roomTypes', 'roomFloors', 'isSearch'));
-});
- 
 Route::middleware('role:admin')->group(function () {
     Route::get('/admin/dashboard', function () {
         $rooms = Room::all();
@@ -135,6 +133,7 @@ Route::middleware('auth')->group(function () {
         
         $validated = $request->validate([
             'nama_tamu' => 'required|string|max:255',
+            'email_tamu' => 'required|email|max:255',
             'telepon_tamu' => 'required|string|max:20',
             'tanggal_check_in' => 'required|date|after_or_equal:today',
             'tanggal_check_out' => 'required|date|after:tanggal_check_in',
@@ -153,7 +152,7 @@ Route::middleware('auth')->group(function () {
         Reservation::create([
             'kode_booking' => 'BKG-' . strtoupper(Str::random(6)),
             'nama_tamu' => $validated['nama_tamu'],
-            'email_tamu' => Auth::user()->email, // Menyimpan email dari auth user
+            'email_tamu' => $validated['email_tamu'], // Menyimpan email dari input manual form
             'telepon_tamu' => $validated['telepon_tamu'],
             'room_id' => $room->id,
             'tanggal_check_in' => $validated['tanggal_check_in'],

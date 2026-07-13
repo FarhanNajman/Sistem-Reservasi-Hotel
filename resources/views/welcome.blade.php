@@ -19,28 +19,17 @@
     <!-- Room List Section -->
     <section class="section" id="kamar-section">
         <div class="section-header">
-            @if($isSearch)
-                <h2>Hasil Pencarian Kamar</h2>
-                <p>Kamar yang tersedia sesuai kriteria Anda.</p>
-            @else
-                <h2>Kamar Terbaru</h2>
-                <p>Jelajahi kamar-kamar terbaru kami dengan fasilitas yang baru diperbarui.</p>
-            @endif
+            <h2> Kamar Terbaru</h2>
+            <p>Jelajahi kamar-kamar terbaru kami dengan fasilitas yang baru diperbarui.</p>
         </div>
 
         <div class="room-grid">
-            @forelse($isSearch ? $rooms : $latestRooms as $room)
+            @forelse($latestRooms as $room)
                 @include('partials.room_card', ['room' => $room])
             @empty
                 <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: white; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
-                    @if($isSearch)
-                        <i data-lucide="search-x" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 15px;"></i>
-                        <h3>Kamar tidak ditemukan</h3>
-                        <p>Coba ubah jumlah tamu, tipe kamar, atau lantai lainnya.</p>
-                    @else
-                        <i data-lucide="help-circle" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 15px;"></i>
-                        <h3>Belum ada kamar terbaru</h3>
-                    @endif
+                    <i data-lucide="help-circle" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 15px;"></i>
+                    <h3>Belum ada kamar terbaru</h3>
                 </div>
             @endforelse
         </div>
@@ -90,15 +79,4 @@
 @endsection
 
 @section('scripts')
-    @if($isSearch)
-    <script>
-        // Auto scroll to results when search is performed
-        window.addEventListener('DOMContentLoaded', (event) => {
-            const kamarSection = document.getElementById('kamar-section');
-            if(kamarSection) {
-                kamarSection.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-    </script>
-    @endif
 @endsection

@@ -1,5 +1,5 @@
 <div class="search-bar-container" {!! isset($noMarginTop) && $noMarginTop ? 'style="margin-top: 0;"' : '' !!}>
-    <form action="{{ url('/reservasi/cari') }}#kamar-section" method="GET" class="search-form" id="searchForm">
+    <form action="{{ route('rooms.semua') }}" method="GET" class="search-form" id="searchForm">
         <div class="form-group">
             <label for="check_in"><i data-lucide="calendar-input" style="width: 14px; vertical-align: middle; margin-right: 4px;"></i> Check-In</label>
             <input type="date" id="check_in" name="check_in" required value="{{ request('check_in', date('Y-m-d')) }}" min="{{ date('Y-m-d') }}">

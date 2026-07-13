@@ -25,12 +25,11 @@
 
                 <div class="form-group" style="margin-bottom: 20px;">
                     <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-dark);">Alamat Email</label>
-                    <input type="email" value="{{ Auth::user()->email }}" disabled style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; background-color: #f8fafc; font-family: inherit; color: var(--text-muted);">
-                    <small style="color: var(--text-muted); display: block; margin-top: 5px;">Email ini akan digunakan untuk mengirim konfirmasi (sesuai akun).</small>
+                    <input type="email" name="email_tamu" value="{{ Auth::user()->email }}" required style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; background-color: #fff; font-family: inherit; color: var(--text-dark);">
                 </div>
 
                 <div class="form-group" style="margin-bottom: 30px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-dark);">Nomor Telepon / WhatsApp <span style="color: red;">*</span></label>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-dark);">Nomor Telepon <span style="color: red;"></span></label>
                     <input type="text" name="telepon_tamu" required placeholder="Contoh: 081234567890" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit;">
                 </div>
 
@@ -38,11 +37,11 @@
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                     <div class="form-group">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-dark);">Tanggal Check-in <span style="color: red;">*</span></label>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-dark);">Tanggal Check-in <span style="color: red;"></span></label>
                         <input type="date" name="tanggal_check_in" id="checkin_date" required min="{{ date('Y-m-d') }}" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit;">
                     </div>
                     <div class="form-group">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-dark);">Tanggal Check-out <span style="color: red;">*</span></label>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-dark);">Tanggal Check-out <span style="color: red;"></span></label>
                         <input type="date" name="tanggal_check_out" id="checkout_date" required min="{{ date('Y-m-d', strtotime('+1 day')) }}" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit;">
                     </div>
                 </div>
@@ -53,7 +52,7 @@
                 </div>
 
                 <button type="submit" style="width: 100%; padding: 14px; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: 0.3s;" onmouseover="this.style.backgroundColor='var(--primary-dark)'" onmouseout="this.style.backgroundColor='var(--primary-color)'">
-                    Konfirmasi & Pesan Sekarang
+                    Konfirmasi & Lanjutkan Pembayaran
                 </button>
             </form>
         </div>
