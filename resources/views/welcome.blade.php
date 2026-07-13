@@ -90,26 +90,6 @@
 @endsection
 
 @section('scripts')
-    <script>
-        // Logika sederhana untuk validasi tanggal check-in & check-out
-        const checkInInput = document.getElementById('check_in');
-        const checkOutInput = document.getElementById('check_out');
-
-        if(checkInInput && checkOutInput) {
-            checkInInput.addEventListener('change', function() {
-                // Check-out minimal harus H+1 dari check-in
-                const checkInDate = new Date(this.value);
-                checkInDate.setDate(checkInDate.getDate() + 1);
-                
-                const nextDayString = checkInDate.toISOString().split('T')[0];
-                checkOutInput.min = nextDayString;
-                
-                if (checkOutInput.value < nextDayString) {
-                    checkOutInput.value = nextDayString;
-                }
-            });
-        }
-    </script>
     @if($isSearch)
     <script>
         // Auto scroll to results when search is performed

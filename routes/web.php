@@ -32,7 +32,9 @@ Route::prefix('reservasi_hotel')->group(function () {
     Route::get('/semua-kamar', function () {
         $rooms = Room::all();
         $title = 'Semua Kamar';
-        return view('rooms.index', compact('rooms', 'title'));
+        $roomTypes = Room::select('tipe_kamar')->distinct()->pluck('tipe_kamar');
+        $roomFloors = Room::select('lantai')->distinct()->orderBy('lantai')->pluck('lantai');
+        return view('rooms.index', compact('rooms', 'title', 'roomTypes', 'roomFloors'));
     })->name('rooms.semua');
 
     Route::get('/kamar/{id}', function ($id) {
