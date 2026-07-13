@@ -20,7 +20,7 @@ Route::prefix('reservasi_hotel')->group(function () {
     Route::get('/kamar/{id}', function ($id) {
         $room = Room::findOrFail($id);
         return view('rooms.show', compact('room'));
-    })->name('rooms.show');
+    })->name('rooms.show')->where('id', '[0-9]+');
 });
  
 Route::middleware('role:admin')->group(function () {

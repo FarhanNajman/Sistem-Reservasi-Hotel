@@ -24,12 +24,18 @@
             @csrf
             <div class="form-group">
                 <label for="tipe_kamar">Tipe Kamar</label>
-                <input type="text" name="tipe_kamar" id="tipe_kamar" value="{{ old('tipe_kamar', $room->tipe_kamar) }}" required>
+                <select name="tipe_kamar" id="tipe_kamar" required>
+                    <option value="" disabled selected>Pilih Tipe Kamar</option>
+                    <option value="Standard Room" {{ old('tipe_kamar', $room->tipe_kamar) == 'Standard Room' ? 'selected' : '' }}>Standard Room</option>
+                    <option value="Deluxe Room" {{ old('tipe_kamar', $room->tipe_kamar) == 'Deluxe Room' ? 'selected' : '' }}>Deluxe Room</option>
+                    <option value="VIP Room" {{ old('tipe_kamar', $room->tipe_kamar) == 'VIP Room' ? 'selected' : '' }}>VIP Room</option>
+                </select>
             </div>
 
             <div class="form-group">
                 <label for="lantai">Lantai</label>
                 <select name="lantai" id="lantai" required>
+                    <option value="" disabled selected>Pilih Lantai</option>
                     <option value="1" {{ old('lantai', $room->lantai) == '1' ? 'selected' : '' }}>Lantai 1</option>
                     <option value="2" {{ old('lantai', $room->lantai) == '2' ? 'selected' : '' }}>Lantai 2</option>
                     <option value="3" {{ old('lantai', $room->lantai) == '3' ? 'selected' : '' }}>Lantai 3</option>
