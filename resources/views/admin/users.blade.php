@@ -8,7 +8,7 @@
         <h2>Daftar Pengguna Terdaftar</h2>
         <p>Kelola semua akun pengguna dan administrator yang terdaftar dalam sistem hotel.</p>
     </div>
-
+ 
     <div style="background: white; border-radius: var(--radius-lg); overflow: hidden; padding: 20px;">
         @if($users->isEmpty())
             <div style="text-align: center; padding: 40px; color: var(--text-muted);">
