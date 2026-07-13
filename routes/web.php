@@ -22,7 +22,7 @@ Route::prefix('reservasi_hotel')->group(function () {
         return view('rooms.show', compact('room'));
     })->name('rooms.show');
 });
-
+ 
 Route::middleware('role:admin')->group(function () {
     Route::get('/admin/dashboard', function () {
         $rooms = Room::all();

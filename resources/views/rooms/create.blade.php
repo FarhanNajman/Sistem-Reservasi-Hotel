@@ -8,7 +8,7 @@
         <h2>Tambah Kamar Baru</h2>
         <p>Tambahkan data kamar baru ke sistem hotel.</p>
     </div>
-
+ 
     <div style="background: white; padding: 20px; border-radius: var(--radius-lg);">
         @if ($errors->any())
             <div style="color: red; margin-bottom: 10px;">

@@ -11,7 +11,7 @@
             <p>Perpaduan sempurna antara kemewahan modern, kenyamanan prima, dan kehangatan tradisi pelayanan terbaik di pusat kota.</p>
         </div>
     </section>
-
+ 
     <!-- Search / Filter Bar Container -->
     <div style="display: flex; justify-content: center; width: 100%;">
         <div class="search-bar-container">

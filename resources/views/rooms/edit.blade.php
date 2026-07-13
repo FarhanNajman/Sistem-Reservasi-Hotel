@@ -60,7 +60,7 @@
                     <option value="perbaikan" {{ old('status', $room->status) == 'perbaikan' ? 'selected' : '' }}>Perbaikan</option>
                 </select>
             </div>
-
+ 
             <div class="form-group">
                 <label for="foto_kamar_upload">Unggah Foto Kamar</label>
                 <div class="file-upload-wrapper">

@@ -178,7 +178,7 @@
                         </span>
                     </div>
                 </div>
-
+ 
                 <p class="sidebar-desc-brief">
                     {{ $room->deskripsi }}
                 </p>
