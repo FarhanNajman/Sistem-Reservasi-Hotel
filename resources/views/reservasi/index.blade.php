@@ -22,7 +22,7 @@
                 <table style="width: 100%; border-collapse: collapse; text-align: left;">
                     <thead>
                         <tr style="background-color: #f1f5f9; border-bottom: 2px solid #e2e8f0;">
-                            <th style="padding: 12px 16px; font-weight: 600; color: var(--text-dark);">Kode Booking</th>
+                            <th style="padding: 12px 16px; font-weight: 600; color: var(--text-dark);">Kode Reservasi</th>
                             <th style="padding: 12px 16px; font-weight: 600; color: var(--text-dark);">Kamar</th>
                             <th style="padding: 12px 16px; font-weight: 600; color: var(--text-dark);">Check-in / Check-out</th>
                             <th style="padding: 12px 16px; font-weight: 600; color: var(--text-dark);">Total Harga</th>

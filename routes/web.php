@@ -150,7 +150,7 @@ Route::middleware('auth')->group(function () {
         $totalHarga = $hari * $room->harga_per_malam;
 
         $reservation = Reservation::create([
-            'kode_booking' => 'BKG-' . strtoupper(Str::random(6)),
+            'kode_booking' => 'RSV-LT' . $room->lantai . 'N' . $room->nomor_kamar . '-' . $checkIn->format('ymd'),
             'nama_tamu' => $validated['nama_tamu'],
             'email_tamu' => $validated['email_tamu'], // Menyimpan email dari input manual form
             'telepon_tamu' => $validated['telepon_tamu'],

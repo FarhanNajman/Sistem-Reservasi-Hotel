@@ -19,7 +19,7 @@
             <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 1.1rem; color: var(--text-dark); border-bottom: 1px solid #e2e8f0; padding-bottom: 15px;">Ringkasan Pesanan</h3>
             
             <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                <span style="color: var(--text-muted);">Kode Booking</span>
+                <span style="color: var(--text-muted);">Kode Reservasi</span>
                 <span style="font-weight: 600; color: var(--text-dark);">{{ $reservation->kode_booking }}</span>
             </div>
             
