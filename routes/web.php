@@ -179,17 +179,40 @@ Route::middleware('auth')->group(function () {
         return view('pembayaran.show', compact('reservation'));
     })->name('pembayaran.show');
 
-    // Memproses pembayaran
-    Route::post('/pembayaran/{id}/proses', function ($id) {
+    // Menampilkan halaman scan QR Code
+    Route::get('/pembayaran/{id}/scan', function (\Illuminate\Http\Request $request, $id) {
+        $reservation = Reservation::findOrFail($id);
+        $paymentMethod = $request->query('payment_method', 'gopay');
+        
+        return view('pembayaran.scan', compact('reservation', 'paymentMethod'));
+    })->name('pembayaran.scan');
+
+    // Memproses konfirmasi pembayaran (upload bukti)
+    Route::post('/pembayaran/{id}/konfirmasi', function (\Illuminate\Http\Request $request, $id) {
         $reservation = Reservation::findOrFail($id);
         
-        // Simulasi sukses pembayaran, ubah status jadi dikonfirmasi (atau dibayar)
-        $reservation->update([
-            'status' => 'dikonfirmasi'
+        $request->validate([
+            'bukti_pembayaran' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        return redirect()->route('reservasi.saya')->with('success', 'Pembayaran berhasil! Reservasi Anda telah dikonfirmasi.');
-    })->name('pembayaran.proses');
+        if ($request->hasFile('bukti_pembayaran')) {
+            $file = $request->file('bukti_pembayaran');
+            $filename = time() . '_' . $reservation->kode_booking . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('public/bukti_pembayaran', $filename);
+            
+            $reservation->update([
+                'bukti_pembayaran' => $path
+            ]);
+        }
+
+        return redirect()->route('invoice.show', $reservation->id)->with('success', 'Bukti pembayaran berhasil diunggah! Menunggu konfirmasi dari admin.');
+    })->name('pembayaran.konfirmasi');
+
+    // Menampilkan halaman invoice
+    Route::get('/invoice/{id}', function ($id) {
+        $reservation = Reservation::findOrFail($id);
+        return view('pembayaran.invoice', compact('reservation'));
+    })->name('invoice.show');
 
     // Menampilkan halaman reservasi saya
     Route::get('/reservasi-saya', function () {

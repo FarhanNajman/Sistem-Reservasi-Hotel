@@ -20,6 +20,7 @@ class Reservation extends Model
         'total_harga',
         'status',
         'catatan',
+        'bukti_pembayaran',
     ];
 
     protected function casts(): array

@@ -49,8 +49,7 @@
         <div style="background: white; border-radius: var(--radius-lg); padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
             <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 1.1rem; color: var(--text-dark);">Metode Pembayaran</h3>
             
-            <form action="{{ route('pembayaran.proses', $reservation->id) }}" method="POST">
-                @csrf
+            <form action="{{ route('pembayaran.scan', $reservation->id) }}" method="GET">
                 
                 <!-- E-Wallet Accordion -->
                 <div style="border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 25px; overflow: hidden; background: white;">
@@ -118,7 +117,7 @@
                         <i data-lucide="arrow-left" style="width: 18px; height: 18px;"></i> Kembali
                     </a>
                     <button type="submit" style="flex: 2; padding: 16px; background-color: #0f172a; color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;" onmouseover="this.style.backgroundColor='#1e293b'" onmouseout="this.style.backgroundColor='#0f172a'">
-                        Bayar Sekarang <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+                        Lanjut ke Pembayaran <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
                     </button>
                 </div>
             </form>
