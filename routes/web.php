@@ -16,13 +16,37 @@ Route::redirect('/', '/reservasi_hotel');
 Route::prefix('reservasi_hotel')->group(function () {
     Route::get('/', function () {
         $rooms = Room::all();
-        return view('welcome', compact('rooms'));
+        $latestRooms = Room::orderBy('created_at', 'desc')->take(3)->get();
+        $isSearch = false;
+        return view('welcome', compact('rooms', 'latestRooms', 'isSearch'));
     });
 
     Route::get('/kamar/{id}', function ($id) {
         $room = Room::findOrFail($id);
         return view('rooms.show', compact('room'));
     })->name('rooms.show')->where('id', '[0-9]+');
+});
+
+Route::get('/reservasi/cari', function (Request $request) {
+    $checkIn = $request->input('check_in', date('Y-m-d'));
+    $checkOut = $request->input('check_out', date('Y-m-d', strtotime('+1 day')));
+    $tamu = $request->input('tamu', 2);
+
+    $query = Room::where('kapasitas', '>=', $tamu)
+                 ->where('status', '!=', 'perbaikan'); // Jangan tampilkan yang perbaikan
+
+    if ($checkIn && $checkOut) {
+        $query->whereDoesntHave('reservations', function ($q) use ($checkIn, $checkOut) {
+            $q->where('tanggal_check_in', '<', $checkOut)
+              ->where('tanggal_check_out', '>', $checkIn)
+              ->whereIn('status', ['pending', 'dikonfirmasi']);
+        });
+    }
+
+    $rooms = $query->get();
+    $latestRooms = collect(); // Kosongkan pada saat pencarian
+    $isSearch = true;
+    return view('welcome', compact('rooms', 'latestRooms', 'isSearch'));
 });
  
 Route::middleware('role:admin')->group(function () {
