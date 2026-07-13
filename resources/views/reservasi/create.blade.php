@@ -51,9 +51,14 @@
                     <textarea name="catatan" rows="3" placeholder="Contoh: Minta kamar di lantai bawah, extra bed, dll." style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea>
                 </div>
 
-                <button type="submit" style="width: 100%; padding: 14px; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: 0.3s;" onmouseover="this.style.backgroundColor='var(--primary-dark)'" onmouseout="this.style.backgroundColor='var(--primary-color)'">
-                    Konfirmasi & Lanjutkan Pembayaran
-                </button>
+                <div style="display: flex; gap: 15px;">
+                    <a href="{{ route('rooms.show', $room->id) }}" style="flex: 1; padding: 14px; background-color: #f1f5f9; color: var(--text-dark); text-decoration: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; text-align: center; display: inline-block; cursor: pointer; transition: 0.3s;" onmouseover="this.style.backgroundColor='#e2e8f0'" onmouseout="this.style.backgroundColor='#f1f5f9'">
+                        Batal
+                    </a>
+                    <button type="submit" style="flex: 2; padding: 14px; background-color: #0f172a; color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: 0.3s;" onmouseover="this.style.backgroundColor='#1e293b'" onmouseout="this.style.backgroundColor='#0f172a'">
+                        Konfirmasi & Lanjutkan Pembayaran
+                    </button>
+                </div>
             </form>
         </div>
 

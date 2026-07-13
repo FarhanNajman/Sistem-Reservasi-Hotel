@@ -149,8 +149,16 @@ Route::middleware('auth')->group(function () {
 
         $totalHarga = $hari * $room->harga_per_malam;
 
+        $baseKode = 'RSV-LT' . $room->lantai . 'N' . $room->nomor_kamar . '-' . $checkIn->format('ymd');
+        $kodeBooking = $baseKode;
+        $counter = 1;
+        while (\App\Models\Reservation::where('kode_booking', $kodeBooking)->exists()) {
+            $kodeBooking = $baseKode . '-' . $counter;
+            $counter++;
+        }
+
         $reservation = Reservation::create([
-            'kode_booking' => 'RSV-LT' . $room->lantai . 'N' . $room->nomor_kamar . '-' . $checkIn->format('ymd'),
+            'kode_booking' => $kodeBooking,
             'nama_tamu' => $validated['nama_tamu'],
             'email_tamu' => $validated['email_tamu'], // Menyimpan email dari input manual form
             'telepon_tamu' => $validated['telepon_tamu'],

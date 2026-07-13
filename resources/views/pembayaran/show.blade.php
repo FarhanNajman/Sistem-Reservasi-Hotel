@@ -113,9 +113,14 @@
                     </div>
                 </div>
                 
-                <button type="submit" style="width: 100%; padding: 16px; background-color: #0f172a; color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;" onmouseover="this.style.backgroundColor='#1e293b'" onmouseout="this.style.backgroundColor='#0f172a'">
-                    Bayar Sekarang <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
-                </button>
+                <div style="display: flex; gap: 15px;">
+                    <a href="{{ route('reservasi.pesan', $reservation->room_id) }}" style="flex: 1; padding: 16px; background-color: #f1f5f9; color: var(--text-dark); text-decoration: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.backgroundColor='#e2e8f0'" onmouseout="this.style.backgroundColor='#f1f5f9'">
+                        <i data-lucide="arrow-left" style="width: 18px; height: 18px;"></i> Kembali
+                    </a>
+                    <button type="submit" style="flex: 2; padding: 16px; background-color: #0f172a; color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;" onmouseover="this.style.backgroundColor='#1e293b'" onmouseout="this.style.backgroundColor='#0f172a'">
+                        Bayar Sekarang <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+                    </button>
+                </div>
             </form>
         </div>
 
