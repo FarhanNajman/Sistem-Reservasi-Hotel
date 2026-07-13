@@ -42,6 +42,8 @@ Route::prefix('reservasi_hotel')->group(function () {
 });
 
 Route::get('/reservasi/cari', function (Request $request) {
+    $checkIn = $request->input('check_in', date('Y-m-d'));
+    $checkOut = $request->input('check_out', date('Y-m-d', strtotime('+1 day')));
     $tamu = $request->input('tamu', 2);
     $tipeKamar = $request->input('tipe_kamar');
     $lantai = $request->input('lantai');
@@ -55,6 +57,14 @@ Route::get('/reservasi/cari', function (Request $request) {
 
     if ($lantai) {
         $query->where('lantai', $lantai);
+    }
+
+    if ($checkIn && $checkOut) {
+        $query->whereDoesntHave('reservations', function ($q) use ($checkIn, $checkOut) {
+            $q->where('tanggal_check_in', '<', $checkOut)
+              ->where('tanggal_check_out', '>', $checkIn)
+              ->whereIn('status', ['pending', 'dikonfirmasi']);
+        });
     }
 
     $rooms = $query->get();

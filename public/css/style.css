@@ -229,7 +229,7 @@ a {
 
 .search-form {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr auto;
+    grid-template-columns: repeat(3, 1fr);
     gap: 15px;
     align-items: end; /* pastikan button sejajar dengan input form */
 }

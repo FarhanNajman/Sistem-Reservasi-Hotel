@@ -17,6 +17,16 @@
         <div class="search-bar-container">
             <form action="{{ url('/reservasi/cari') }}#kamar-section" method="GET" class="search-form" id="searchForm">
                 <div class="form-group">
+                    <label for="check_in"><i data-lucide="calendar-input" style="width: 14px; vertical-align: middle; margin-right: 4px;"></i> Check-In</label>
+                    <input type="date" id="check_in" name="check_in" required value="{{ request('check_in', date('Y-m-d')) }}" min="{{ date('Y-m-d') }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="check_out"><i data-lucide="calendar-output" style="width: 14px; vertical-align: middle; margin-right: 4px;"></i> Check-Out</label>
+                    <input type="date" id="check_out" name="check_out" required value="{{ request('check_out', date('Y-m-d', strtotime('+1 day'))) }}" min="{{ date('Y-m-d', strtotime('+1 day')) }}">
+                </div>
+
+                <div class="form-group">
                     <label for="lantai"><i data-lucide="layers" style="width: 14px; vertical-align: middle; margin-right: 4px;"></i> Lantai</label>
                     <select id="lantai" name="lantai">
                         <option value="">Semua Lantai</option>
@@ -126,6 +136,26 @@
 @endsection
 
 @section('scripts')
+    <script>
+        // Logika sederhana untuk validasi tanggal check-in & check-out
+        const checkInInput = document.getElementById('check_in');
+        const checkOutInput = document.getElementById('check_out');
+
+        if(checkInInput && checkOutInput) {
+            checkInInput.addEventListener('change', function() {
+                // Check-out minimal harus H+1 dari check-in
+                const checkInDate = new Date(this.value);
+                checkInDate.setDate(checkInDate.getDate() + 1);
+                
+                const nextDayString = checkInDate.toISOString().split('T')[0];
+                checkOutInput.min = nextDayString;
+                
+                if (checkOutInput.value < nextDayString) {
+                    checkOutInput.value = nextDayString;
+                }
+            });
+        }
+    </script>
     @if($isSearch)
     <script>
         // Auto scroll to results when search is performed
