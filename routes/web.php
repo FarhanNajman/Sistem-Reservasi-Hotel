@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\Room;
@@ -60,15 +61,57 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Room Booking Route (Checks auth and redirects if guest)
-Route::get('/reservasi/pesan/{id}', function ($id) {
-    if (!Auth::check()) {
-        return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu untuk melakukan pemesanan.');
-    }
-    
-    $room = Room::findOrFail($id);
-    return redirect('/reservasi_hotel')->with('success', 'Kamar No. ' . $room->nomor_kamar . ' (' . $room->tipe_kamar . ') berhasil dipilih! Fitur pengisian data pesanan segera hadir.');
-})->name('reservasi.pesan');
+Route::middleware('auth')->group(function () {
+    // Menampilkan form pesanan
+    Route::get('/reservasi/pesan/{id}', function ($id) {
+        $room = Room::findOrFail($id);
+        return view('reservasi.create', compact('room'));
+    })->name('reservasi.pesan');
+
+    // Memproses data pesanan
+    Route::post('/reservasi/pesan/{id}', function (Request $request, $id) {
+        $room = Room::findOrFail($id);
+        
+        $validated = $request->validate([
+            'nama_tamu' => 'required|string|max:255',
+            'telepon_tamu' => 'required|string|max:20',
+            'tanggal_check_in' => 'required|date|after_or_equal:today',
+            'tanggal_check_out' => 'required|date|after:tanggal_check_in',
+            'catatan' => 'nullable|string',
+        ]);
+
+        // Kalkulasi jumlah hari
+        $checkIn = \Carbon\Carbon::parse($validated['tanggal_check_in']);
+        $checkOut = \Carbon\Carbon::parse($validated['tanggal_check_out']);
+        $hari = $checkIn->diffInDays($checkOut);
+        
+        if ($hari == 0) $hari = 1;
+
+        $totalHarga = $hari * $room->harga_per_malam;
+
+        Reservation::create([
+            'kode_booking' => 'BKG-' . strtoupper(Str::random(6)),
+            'nama_tamu' => $validated['nama_tamu'],
+            'email_tamu' => Auth::user()->email, // Menyimpan email dari auth user
+            'telepon_tamu' => $validated['telepon_tamu'],
+            'room_id' => $room->id,
+            'tanggal_check_in' => $validated['tanggal_check_in'],
+            'tanggal_check_out' => $validated['tanggal_check_out'],
+            'total_harga' => $totalHarga,
+            'status' => 'pending',
+            'catatan' => $validated['catatan'],
+        ]);
+
+        return redirect()->route('reservasi.saya')->with('success', 'Reservasi berhasil dibuat! Silakan tunggu konfirmasi.');
+    });
+
+    // Menampilkan halaman reservasi saya
+    Route::get('/reservasi-saya', function () {
+        // Mengambil reservasi berdasarkan email pengguna yang sedang login
+        $reservations = Reservation::where('email_tamu', Auth::user()->email)->with('room')->orderBy('created_at', 'desc')->get();
+        return view('reservasi.index', compact('reservations'));
+    })->name('reservasi.saya');
+});
 
 
 // Admin: Edit, Update, Delete Kamar (basic closures)
