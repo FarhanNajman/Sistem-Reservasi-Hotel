@@ -3,7 +3,7 @@
 @section('title', 'Edit Kamar - N★JM Hotel')
 
 @section('content')
-<div class="section">
+<div>
     <div class="section-header">
         <h2>Edit Kamar</h2>
         <p>Ubah detail Kamar No. {{ $room->nomor_kamar }}</p>
@@ -100,6 +100,25 @@
 
             <div class="preview-image-wrapper hidden" id="denahPreviewWrapper">
                 <img src="" id="denahPreviewImage" alt="Preview Denah Kamar">
+            </div>
+
+            <div class="form-group">
+                <label>Fasilitas Kamar</label>
+                @php
+                    $fasilitas = old('fasilitas', $room->fasilitas ?? []);
+                    if(!is_array($fasilitas)) $fasilitas = json_decode($fasilitas, true) ?? [];
+                @endphp
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px;">
+                    <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer; text-transform: none; color: var(--text-dark);"><input type="checkbox" name="fasilitas[]" value="WiFi Gratis" {{ in_array('WiFi Gratis', $fasilitas) ? 'checked' : '' }}> WiFi Gratis</label>
+                    <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer; text-transform: none; color: var(--text-dark);"><input type="checkbox" name="fasilitas[]" value="AC" {{ in_array('AC', $fasilitas) ? 'checked' : '' }}> AC</label>
+                    <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer; text-transform: none; color: var(--text-dark);"><input type="checkbox" name="fasilitas[]" value="TV Kabel" {{ in_array('TV Kabel', $fasilitas) ? 'checked' : '' }}> TV Kabel</label>
+                    <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer; text-transform: none; color: var(--text-dark);"><input type="checkbox" name="fasilitas[]" value="Kamar Mandi Dalam" {{ in_array('Kamar Mandi Dalam', $fasilitas) ? 'checked' : '' }}> Kamar Mandi Dalam</label>
+                    <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer; text-transform: none; color: var(--text-dark);"><input type="checkbox" name="fasilitas[]" value="Sarapan Pagi" {{ in_array('Sarapan Pagi', $fasilitas) ? 'checked' : '' }}> Sarapan Pagi</label>
+                    <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer; text-transform: none; color: var(--text-dark);"><input type="checkbox" name="fasilitas[]" value="Layanan Kamar 24 Jam" {{ in_array('Layanan Kamar 24 Jam', $fasilitas) ? 'checked' : '' }}> Layanan Kamar 24 Jam</label>
+                    <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer; text-transform: none; color: var(--text-dark);"><input type="checkbox" name="fasilitas[]" value="Kulkas Mini" {{ in_array('Kulkas Mini', $fasilitas) ? 'checked' : '' }}> Kulkas Mini</label>
+                    <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer; text-transform: none; color: var(--text-dark);"><input type="checkbox" name="fasilitas[]" value="Pembuat Kopi/Teh" {{ in_array('Pembuat Kopi/Teh', $fasilitas) ? 'checked' : '' }}> Pembuat Kopi/Teh</label>
+                    <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer; text-transform: none; color: var(--text-dark);"><input type="checkbox" name="fasilitas[]" value="Brankas" {{ in_array('Brankas', $fasilitas) ? 'checked' : '' }}> Brankas</label>
+                </div>
             </div>
 
             <div class="form-group">

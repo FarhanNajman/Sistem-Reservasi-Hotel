@@ -20,6 +20,11 @@ class Room extends Model
         'foto_kamar',
         'denah_kamar',
         'status',
+        'fasilitas',
+    ];
+
+    protected $casts = [
+        'fasilitas' => 'array',
     ];
 
     public static function normalizeNomorKamar(int $lantai, string $nomorKamar): string

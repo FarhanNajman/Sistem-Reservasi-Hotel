@@ -13,6 +13,7 @@
         body {
             margin: 0;
             background-color: #f4f6f9;
+            padding-left: 260px;
         }
         .admin-sidebar {
             width: 260px;
@@ -68,10 +69,12 @@
             background-color: #1a1a27;
         }
         .admin-main {
-            margin-left: 260px;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
         }
         .admin-content {
             flex: 1;

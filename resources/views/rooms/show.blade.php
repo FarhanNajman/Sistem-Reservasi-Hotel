@@ -90,31 +90,37 @@
                 <div class="divider"></div>
 
                 <h4 class="section-subtitle">Fasilitas yang Didapat</h4>
+                @php
+                    $icons = [
+                        'WiFi Gratis' => 'wifi',
+                        'AC' => 'snowflake',
+                        'TV Kabel' => 'tv',
+                        'Kamar Mandi Dalam' => 'bath',
+                        'Sarapan Pagi' => 'utensils',
+                        'Layanan Kamar 24 Jam' => 'concierge-bell',
+                        'Kulkas Mini' => 'archive',
+                        'Pembuat Kopi/Teh' => 'coffee',
+                        'Brankas' => 'lock',
+                    ];
+                    $defaultIcon = 'check-circle';
+                    
+                    $fasilitasArray = $room->fasilitas;
+                    if(is_string($fasilitasArray)) $fasilitasArray = json_decode($fasilitasArray, true);
+                    if(!is_array($fasilitasArray)) $fasilitasArray = [];
+                @endphp
                 <div class="amenities-grid">
-                    <div class="amenity-item">
-                        <i data-lucide="wifi"></i>
-                        <span>Koneksi Wi-Fi Gratis & Cepat</span>
-                    </div>
-                    <div class="amenity-item">
-                        <i data-lucide="snowflake"></i>
-                        <span>Pendingin Ruangan (AC) Sentral</span>
-                    </div>
-                    <div class="amenity-item">
-                        <i data-lucide="tv"></i>
-                        <span>TV Flat-Screen Smart TV</span>
-                    </div>
-                    <div class="amenity-item">
-                        <i data-lucide="coffee"></i>
-                        <span>Teko Listrik / Coffee Maker</span>
-                    </div>
-                    <div class="amenity-item">
-                        <i data-lucide="bath"></i>
-                        <span>Kamar Mandi Dalam & Hot Shower</span>
-                    </div>
-                    <div class="amenity-item">
-                        <i data-lucide="concierge-bell"></i>
-                        <span>Layanan Housekeeping Harian</span>
-                    </div>
+                    @if(count($fasilitasArray) > 0)
+                        @foreach($fasilitasArray as $fas)
+                            <div class="amenity-item">
+                                <i data-lucide="{{ $icons[$fas] ?? $defaultIcon }}"></i>
+                                <span>{{ $fas }}</span>
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="amenity-item" style="grid-column: 1 / -1; color: var(--text-muted);">
+                            <span>Belum ada data fasilitas yang ditambahkan.</span>
+                        </div>
+                    @endif
                 </div>
             </div>
 

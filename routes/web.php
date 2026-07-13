@@ -144,6 +144,8 @@ Route::post('/reservasi_hotel/kamar', function (Request $request) {
         'foto_kamar' => 'nullable|string',
         'foto_kamar_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
         'denah_kamar_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
+        'fasilitas' => 'nullable|array',
+        'fasilitas.*' => 'string|max:255',
     ], [
         'nomor_kamar.unique' => 'Nomor kamar sudah ada untuk lantai ini.',
     ]);
@@ -197,6 +199,8 @@ Route::post('/reservasi_hotel/kamar/{id}/update', function (Request $request, $i
         'foto_kamar' => 'nullable|string',
         'foto_kamar_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
         'denah_kamar_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
+        'fasilitas' => 'nullable|array',
+        'fasilitas.*' => 'string|max:255',
     ], [
         'nomor_kamar.unique' => 'Nomor kamar sudah ada untuk lantai ini.',
     ]);
