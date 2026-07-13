@@ -14,6 +14,21 @@
         <form action="{{ url('/login') }}" method="POST" class="auth-form">
             @csrf
 
+            <div class="login-type-toggle" role="tablist" aria-label="Pilih tipe login">
+                <button type="button" class="login-type-btn {{ old('login_type', 'user') === 'user' ? 'active' : '' }}" data-login-type="user">
+                    <i data-lucide="user-circle"></i>
+                    User
+                </button>
+                <button type="button" class="login-type-btn {{ old('login_type') === 'admin' ? 'active' : '' }}" data-login-type="admin">
+                    <i data-lucide="shield-check"></i>
+                    Admin
+                </button>
+                <input type="hidden" name="login_type" id="login_type" value="{{ old('login_type', 'user') }}">
+            </div>
+            @error('login_type')
+                <div class="error-message">{{ $message }}</div>
+            @enderror
+
             <div class="form-group">
                 <label for="username">Username</label>
                 <div class="input-wrapper">
@@ -66,23 +81,39 @@
         const passwordInput = document.getElementById('password');
         const passwordToggle = document.getElementById('passwordToggle');
         const eyeIcon = document.getElementById('eyeIcon');
+        const loginTypeInput = document.getElementById('login_type');
+        const loginTypeButtons = document.querySelectorAll('.login-type-btn');
 
-        passwordToggle.addEventListener('click', function() {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            
-            // Ubah icon Lucide
-            if (type === 'text') {
-                eyeIcon.setAttribute('data-lucide', 'eye-off');
-            } else {
-                eyeIcon.setAttribute('data-lucide', 'eye');
-            }
-            
-            // Re-render icon lucide yang berubah secara dinamis
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
+        loginTypeButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                const selectedType = this.getAttribute('data-login-type');
+
+                loginTypeButtons.forEach(function(btn) {
+                    btn.classList.toggle('active', btn === button);
+                });
+
+                if (loginTypeInput) {
+                    loginTypeInput.value = selectedType;
+                }
+            });
         });
+
+        if (passwordToggle) {
+            passwordToggle.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+
+                if (type === 'text') {
+                    eyeIcon.setAttribute('data-lucide', 'eye-off');
+                } else {
+                    eyeIcon.setAttribute('data-lucide', 'eye');
+                }
+
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            });
+        }
     });
 </script>
 @endsection

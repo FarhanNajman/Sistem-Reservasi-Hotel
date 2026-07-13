@@ -24,12 +24,13 @@ class Room extends Model
     public static function normalizeNomorKamar(int $lantai, string $nomorKamar): string
     {
         $digits = preg_replace('/\D/', '', $nomorKamar) ?: '01';
+        $digits = substr($digits, -2);
 
-        if (strlen($digits) >= 2 && str_starts_with($digits, (string) $lantai)) {
+        if (strlen($digits) === 2 && str_starts_with($digits, (string) $lantai)) {
             return $digits;
         }
 
-        return (string) $lantai . str_pad(substr($digits, -2), 2, '0', STR_PAD_LEFT);
+        return (string) $lantai . str_pad($digits, 2, '0', STR_PAD_LEFT);
     }
 
     /**

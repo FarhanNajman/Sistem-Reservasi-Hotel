@@ -38,8 +38,7 @@
 
             <div class="form-group">
                 <label for="nomor_kamar">Nomor Kamar</label>
-                <input type="text" name="nomor_kamar" id="nomor_kamar" value="{{ old('nomor_kamar', $room->nomor_kamar) }}" placeholder="Contoh: 05" required>
-                <p style="margin-top: 6px; color: #6b7280; font-size: 0.95rem;">Nomor kamar akan otomatis diawali dengan angka lantai yang dipilih, misalnya lantai 2 menjadi 205.</p>
+                <input type="text" name="nomor_kamar" id="nomor_kamar" value="{{ old('nomor_kamar', $room->nomor_kamar) }}" inputmode="numeric" pattern="[0-9]{1,2}" maxlength="2" placeholder="Contoh: 05" required>
             </div>
 
             <div class="form-group">

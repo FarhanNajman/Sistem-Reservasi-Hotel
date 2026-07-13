@@ -28,17 +28,31 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $validated = $request->validate([
             'username' => ['required', 'string'],
             'password' => ['required', 'string'],
+            'login_type' => ['nullable', 'in:user,admin'],
         ], [
             'username.required' => 'Username wajib diisi.',
             'password.required' => 'Password wajib diisi.',
+            'login_type.in' => 'Tipe login tidak valid.',
         ]);
 
-        $remember = $request->boolean('remember');
+        $validated['login_type'] = $validated['login_type'] ?? 'user';
 
-        if (Auth::attempt($credentials, $remember)) {
+        $remember = $request->boolean('remember');
+        $user = User::where('username', $validated['username'])->first();
+
+        if ($user && $user->role !== $validated['login_type']) {
+            throw ValidationException::withMessages([
+                'username' => ['Akun ini tidak terdaftar sebagai ' . ($validated['login_type'] === 'admin' ? 'admin' : 'user') . '.'],
+            ]);
+        }
+
+        if (Auth::attempt([
+            'username' => $validated['username'],
+            'password' => $validated['password'],
+        ], $remember)) {
             $request->session()->regenerate();
 
             $redirectUrl = Auth::user()->role === 'admin'

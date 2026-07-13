@@ -64,17 +64,13 @@ Route::post('/reservasi_hotel/kamar', function (Request $request) {
         abort(403);
     }
 
-    $request->merge([
-        'nomor_kamar' => Room::normalizeNomorKamar((int) $request->input('lantai'), (string) $request->input('nomor_kamar')),
-    ]);
-
     $validated = $request->validate([
         'tipe_kamar' => 'required|string|max:255',
         'lantai' => 'required|integer|min:1|max:3',
         'nomor_kamar' => [
             'required',
             'string',
-            'max:100',
+            'digits_between:1,2',
             Rule::unique('rooms', 'nomor_kamar')->where(fn ($query) => $query->where('lantai', (int) $request->input('lantai'))),
         ],
         'kapasitas' => 'required|integer|min:1',
@@ -86,6 +82,8 @@ Route::post('/reservasi_hotel/kamar', function (Request $request) {
     ], [
         'nomor_kamar.unique' => 'Nomor kamar sudah ada untuk lantai ini.',
     ]);
+
+    $validated['nomor_kamar'] = Room::normalizeNomorKamar((int) $validated['lantai'], (string) $validated['nomor_kamar']);
 
     if ($request->hasFile('foto_kamar_upload')) {
         $path = $request->file('foto_kamar_upload')->store('gambar/kamar', 'public');
@@ -113,17 +111,13 @@ Route::post('/reservasi_hotel/kamar/{id}/update', function (Request $request, $i
 
     $room = Room::findOrFail($id);
 
-    $request->merge([
-        'nomor_kamar' => Room::normalizeNomorKamar((int) $request->input('lantai'), (string) $request->input('nomor_kamar')),
-    ]);
-
     $validated = $request->validate([
         'tipe_kamar' => 'required|string|max:255',
         'lantai' => 'required|integer|min:1|max:3',
         'nomor_kamar' => [
             'required',
             'string',
-            'max:100',
+            'digits_between:1,2',
             Rule::unique('rooms', 'nomor_kamar')->where(fn ($query) => $query->where('lantai', (int) $request->input('lantai')))->ignore($room->id),
         ],
         'kapasitas' => 'required|integer|min:1',
@@ -135,6 +129,8 @@ Route::post('/reservasi_hotel/kamar/{id}/update', function (Request $request, $i
     ], [
         'nomor_kamar.unique' => 'Nomor kamar sudah ada untuk lantai ini.',
     ]);
+
+    $validated['nomor_kamar'] = Room::normalizeNomorKamar((int) $validated['lantai'], (string) $validated['nomor_kamar']);
 
     if ($request->hasFile('foto_kamar_upload')) {
         $path = $request->file('foto_kamar_upload')->store('gambar/kamar', 'public');
