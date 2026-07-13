@@ -4,10 +4,8 @@
 
 @section('content')
 @php
-    $floorPlan = null;
-    $mainImage = $room->foto_kamar ? (filter_var($room->foto_kamar, FILTER_VALIDATE_URL) ? $room->foto_kamar : asset($room->foto_kamar)) : 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80';
-
-    if ($room->tipe_kamar === 'Standard Room') {
+    $floorPlan = $room->denah_kamar;
+    if (!$floorPlan && $room->tipe_kamar === 'Standard Room') {
         if ($room->nomor_kamar === '101') {
             $floorPlan = 'gambar/kamar/standard/denah1.webp';
         } elseif ($room->nomor_kamar === '102') {
@@ -16,6 +14,8 @@
             $floorPlan = 'gambar/kamar/standard/denah3.jpg';
         }
     }
+
+    $mainImage = $room->foto_kamar ? (filter_var($room->foto_kamar, FILTER_VALIDATE_URL) ? $room->foto_kamar : asset($room->foto_kamar)) : 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80';
 @endphp
 
 <div class="detail-container">
@@ -122,7 +122,7 @@
             @if($floorPlan)
                 <div class="detail-info-card">
                     <h3 class="detail-section-title">Denah Layout Kamar</h3>
-                    <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 0.95rem;">Berikut adalah denah desain arsitektur interior untuk Kamar No. {{ $room->nomor_kamar }} (Standard Room).</p>
+                    <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 0.95rem;">Berikut adalah denah desain arsitektur interior untuk Kamar No. {{ $room->nomor_kamar }} ({{ $room->tipe_kamar }}).</p>
                     <div class="floorplan-container">
                         <img src="{{ asset($floorPlan) }}" alt="Denah Kamar {{ $room->nomor_kamar }}" class="floorplan-img" onclick="openLightbox('{{ asset($floorPlan) }}')">
                         <div class="floorplan-overlay">
@@ -242,7 +242,7 @@
         
         lightbox.style.display = "flex";
         lightboxImg.src = imgUrl;
-        lightboxCaption.innerHTML = "Denah Detail Layout Kamar Standard No. {{ $room->nomor_kamar }}";
+        lightboxCaption.innerHTML = "Denah Detail Layout Kamar {{ $room->tipe_kamar }} No. {{ $room->nomor_kamar }}";
     }
 
     function closeLightbox() {

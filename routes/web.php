@@ -79,6 +79,7 @@ Route::post('/reservasi_hotel/kamar', function (Request $request) {
         'deskripsi' => 'nullable|string',
         'foto_kamar' => 'nullable|string',
         'foto_kamar_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
+        'denah_kamar_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
     ], [
         'nomor_kamar.unique' => 'Nomor kamar sudah ada untuk lantai ini.',
     ]);
@@ -88,6 +89,11 @@ Route::post('/reservasi_hotel/kamar', function (Request $request) {
     if ($request->hasFile('foto_kamar_upload')) {
         $path = $request->file('foto_kamar_upload')->store('gambar/kamar', 'public');
         $validated['foto_kamar'] = 'storage/' . $path;
+    }
+
+    if ($request->hasFile('denah_kamar_upload')) {
+        $path = $request->file('denah_kamar_upload')->store('gambar/denah', 'public');
+        $validated['denah_kamar'] = 'storage/' . $path;
     }
 
     Room::create($validated);
@@ -126,6 +132,7 @@ Route::post('/reservasi_hotel/kamar/{id}/update', function (Request $request, $i
         'deskripsi' => 'nullable|string',
         'foto_kamar' => 'nullable|string',
         'foto_kamar_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
+        'denah_kamar_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
     ], [
         'nomor_kamar.unique' => 'Nomor kamar sudah ada untuk lantai ini.',
     ]);
@@ -135,6 +142,11 @@ Route::post('/reservasi_hotel/kamar/{id}/update', function (Request $request, $i
     if ($request->hasFile('foto_kamar_upload')) {
         $path = $request->file('foto_kamar_upload')->store('gambar/kamar', 'public');
         $validated['foto_kamar'] = 'storage/' . $path;
+    }
+
+    if ($request->hasFile('denah_kamar_upload')) {
+        $path = $request->file('denah_kamar_upload')->store('gambar/denah', 'public');
+        $validated['denah_kamar'] = 'storage/' . $path;
     }
 
     $room->update($validated);

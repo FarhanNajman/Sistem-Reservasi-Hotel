@@ -79,6 +79,24 @@
             </div>
 
             <div class="form-group">
+                <label for="denah_kamar_upload">Unggah Gambar Denah Kamar</label>
+                <div class="file-upload-wrapper">
+                    <label for="denah_kamar_upload" class="file-upload-button" title="Pilih gambar denah">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" role="img">
+                            <path fill="#0f172a" d="M5 20h14a2 2 0 002-2v-7h-2v7H5v-7H3v7a2 2 0 002 2Zm11-10l-3-3-3 3h2v4h2v-4h2Zm-6-6h6V2H10a2 2 0 0 0-2 2v4h2V4Zm8 3V4h1.5L17 7ZM9 7V4H7.5L9 7Z"/>
+                        </svg>
+                    </label>
+                    <span class="file-upload-name" id="denahKamarFileName">Tidak ada file dipilih</span>
+                    <button type="button" class="file-upload-clear" id="clearDenahKamarEdit" title="Batal pilih gambar denah">×</button>
+                    <input type="file" name="denah_kamar_upload" id="denah_kamar_upload" accept="image/*">
+                </div>
+            </div>
+
+            <div class="preview-image-wrapper hidden" id="denahPreviewWrapper">
+                <img src="" id="denahPreviewImage" alt="Preview Denah Kamar">
+            </div>
+
+            <div class="form-group">
                 <label for="deskripsi">Deskripsi Kamar</label>
                 <textarea name="deskripsi" id="deskripsi" rows="6" placeholder="Tuliskan fitur utama kamar, suasana, dan pengalaman tamu. Contoh: 'Kamar Deluxe dengan balkon, AC, Wi-Fi cepat, dan pemandangan kota yang menawan.'">{{ old('deskripsi', $room->deskripsi) }}</textarea>
             </div>
@@ -98,6 +116,11 @@
     const previewImage = document.getElementById('previewImage');
     const previewWrapper = document.querySelector('.preview-image-wrapper');
     const clearButton = document.getElementById('clearFotoKamarEdit');
+    const denahFileInput = document.getElementById('denah_kamar_upload');
+    const denahFileNameDisplay = document.getElementById('denahKamarFileName');
+    const denahPreviewImage = document.getElementById('denahPreviewImage');
+    const denahPreviewWrapper = document.getElementById('denahPreviewWrapper');
+    const denahClearButton = document.getElementById('clearDenahKamarEdit');
 
     function previewUpload(event, previewImage, fileNameDisplay, previewWrapper) {
         const file = event.target.files[0];
@@ -136,6 +159,41 @@
     if (clearButton) {
         clearButton.addEventListener('click', function () {
             clearUploadSelection(fileInput, previewWrapper, previewImage, fileNameDisplay);
+        });
+    }
+
+    if (denahFileInput && denahFileNameDisplay && denahPreviewImage && denahPreviewWrapper) {
+        denahFileInput.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (!file) {
+                denahFileNameDisplay.textContent = 'Tidak ada file dipilih';
+                denahPreviewImage.src = '';
+                denahPreviewImage.style.display = 'none';
+                denahPreviewWrapper.classList.add('hidden');
+                denahPreviewWrapper.classList.remove('active');
+                return;
+            }
+
+            denahFileNameDisplay.textContent = file.name;
+            denahPreviewImage.src = URL.createObjectURL(file);
+            denahPreviewWrapper.classList.remove('hidden');
+            denahPreviewWrapper.classList.add('active');
+            denahPreviewImage.style.display = 'block';
+        });
+    }
+
+    if (denahClearButton) {
+        denahClearButton.addEventListener('click', function () {
+            if (denahFileInput) denahFileInput.value = '';
+            if (denahFileNameDisplay) denahFileNameDisplay.textContent = 'Tidak ada file dipilih';
+            if (denahPreviewImage) {
+                denahPreviewImage.src = '';
+                denahPreviewImage.style.display = 'none';
+            }
+            if (denahPreviewWrapper) {
+                denahPreviewWrapper.classList.add('hidden');
+                denahPreviewWrapper.classList.remove('active');
+            }
         });
     }
 </script>

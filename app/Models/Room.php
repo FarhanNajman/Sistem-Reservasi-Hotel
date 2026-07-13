@@ -18,6 +18,7 @@ class Room extends Model
         'kapasitas',
         'deskripsi',
         'foto_kamar',
+        'denah_kamar',
         'status',
     ];
 
