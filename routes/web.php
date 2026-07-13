@@ -21,6 +21,18 @@ Route::prefix('reservasi_hotel')->group(function () {
         return view('welcome', compact('rooms', 'latestRooms', 'isSearch'));
     });
 
+    Route::get('/kamar-terbaru', function () {
+        $rooms = Room::orderBy('created_at', 'desc')->take(3)->get();
+        $title = 'Kamar Terbaru';
+        return view('rooms.index', compact('rooms', 'title'));
+    })->name('rooms.terbaru');
+
+    Route::get('/semua-kamar', function () {
+        $rooms = Room::all();
+        $title = 'Semua Kamar';
+        return view('rooms.index', compact('rooms', 'title'));
+    })->name('rooms.semua');
+
     Route::get('/kamar/{id}', function ($id) {
         $room = Room::findOrFail($id);
         return view('rooms.show', compact('room'));

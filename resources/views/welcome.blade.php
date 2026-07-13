@@ -50,63 +50,51 @@
             <p>Pilihlah tipe kamar terbaik yang sesuai dengan kebutuhan perjalanan bisnis atau liburan keluarga Anda.</p>
         </div>
 
-        <div class="room-grid">
-            @forelse($rooms as $room)
-                <div class="room-card">
-                    <div class="room-img-container">
-                        <a href="{{ route('rooms.show', $room->id) }}">
-                            @if($room->foto_kamar)
-                                <img src="{{ filter_var($room->foto_kamar, FILTER_VALIDATE_URL) ? $room->foto_kamar : asset($room->foto_kamar) }}" alt="{{ $room->tipe_kamar }}" class="room-img">
-                            @else
-                                <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80" alt="Default Room Image" class="room-img">
-                            @endif
-                        </a>
-
-                        @if($room->status === 'tersedia')
-                            <span class="room-badge tersedia">Tersedia</span>
-                        @elseif($room->status === 'penuh')
-                            <span class="room-badge penuh">Penuh</span>
-                        @else
-                            <span class="room-badge perbaikan">Perbaikan</span>
-                        @endif
-                    </div>
-                    
-                    <div class="room-details">
-                        <div class="room-title-row">
-                            <h3 class="room-type">
-                                <a href="{{ route('rooms.show', $room->id) }}" class="room-title-link">{{ $room->tipe_kamar }}</a>
-                            </h3>
-                            <span class="room-number">Lantai {{ $room->lantai }} • No. {{ $room->nomor_kamar }}</span>
+        @if(!$isSearch)
+            <div class="tabs-header" style="display: flex; justify-content: center; gap: 15px; margin-bottom: 30px;">
+                <button type="button" class="tab-btn active" onclick="openTab(this, 'kamar-terbaru')">Kamar Terbaru</button>
+                <button type="button" class="tab-btn" onclick="openTab(this, 'semua-kamar')">Semua Kamar</button>
+            </div>
+            
+            <div id="kamar-terbaru" class="tab-content active">
+                <div class="room-grid">
+                    @forelse($latestRooms as $room)
+                        @include('partials.room_card', ['room' => $room])
+                    @empty
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: white; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+                            <i data-lucide="help-circle" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 15px;"></i>
+                            <h3>Belum ada kamar terbaru</h3>
                         </div>
-                        
-                        <ul class="room-features">
-                            <li><i data-lucide="users" style="width: 14px; color: var(--primary-color);"></i> {{ $room->kapasitas }} Tamu</li>
-                            <li><i data-lucide="wifi" style="width: 14px; color: var(--primary-color);"></i> Free Wi-Fi</li>
-                            <li><i data-lucide="snowflake" style="width: 14px; color: var(--primary-color);"></i> AC</li>
-                        </ul>
-                        
-                        <p class="room-desc">{{ $room->deskripsi }}</p>
-                        
-                        <div class="room-footer">
-                            <div class="room-price-wrapper">
-                                <span class="room-price">Rp {{ number_format($room->harga_per_malam, 0, ',', '.') }}</span>
-                                <span style="font-size: 0.8rem; color: var(--text-muted);">/ malam</span>
-                            </div>
-                            
-                            <div class="room-actions">
-                                <a href="{{ route('rooms.show',$room->id) }}" class="room-detail-btn">Detail</a>
-                            </div>
+                    @endforelse
+                </div>
+            </div>
+            
+            <div id="semua-kamar" class="tab-content" style="display: none;">
+                <div class="room-grid">
+                    @forelse($rooms as $room)
+                        @include('partials.room_card', ['room' => $room])
+                    @empty
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: white; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+                            <i data-lucide="help-circle" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 15px;"></i>
+                            <h3>Belum ada kamar tersedia</h3>
                         </div>
+                    @endforelse
+                </div>
+            </div>
+        @else
+            <div class="room-grid">
+                @forelse($rooms as $room)
+                    @include('partials.room_card', ['room' => $room])
+                @empty
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: white; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+                        <i data-lucide="search-x" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 15px;"></i>
+                        <h3>Kamar tidak ditemukan</h3>
+                        <p>Coba ubah tanggal atau kriteria pencarian lainnya.</p>
+                        <a href="{{ url('/') }}" class="search-submit-btn" style="display: inline-flex; width: auto; margin-top: 15px; text-decoration: none; padding: 10px 20px;">Kembali</a>
                     </div>
-                </div>
-            @empty
-                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: white; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
-                    <i data-lucide="help-circle" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 15px;"></i>
-                    <h3>Belum ada kamar tersedia</h3>
-                    <p>Silakan hubungi administrator hotel untuk input data kamar.</p>
-                </div>
-            @endforelse
-        </div>
+                @endforelse
+            </div>
+        @endif
     </section>
 
     <!-- Services / Amenities Section -->
@@ -170,5 +158,36 @@
                 checkOutInput.value = nextDayString;
             }
         });
+
+    </script>
+    <script>
+        // Tab Logic
+        function openTab(btnElement, tabName) {
+            let i, tabcontent, tablinks;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+                tabcontent[i].classList.remove("active");
+            }
+            
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            
+            const activeContent = document.getElementById(tabName);
+            if (activeContent) {
+                activeContent.style.display = "block";
+                
+                // Force reflow before adding active class for animation
+                void activeContent.offsetWidth;
+                activeContent.classList.add("active");
+            }
+            
+            if (btnElement) {
+                btnElement.classList.add("active");
+            }
+        }
     </script>
 @endsection
