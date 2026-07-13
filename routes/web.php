@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\Room;
 use App\Models\Reservation;
+use App\Models\User;
 use App\Http\Controllers\AuthController;
 
 // Redirect root to /reservasi_hotel
@@ -30,6 +31,26 @@ Route::middleware('role:admin')->group(function () {
 
         return view('admin.dashboard', compact('rooms', 'reservations'));
     })->name('admin.dashboard');
+
+    Route::get('/admin/reservations', function () {
+        $reservations = Reservation::with('room')->orderBy('created_at', 'desc')->get();
+        return view('admin.reservations', compact('reservations'));
+    })->name('admin.reservations');
+
+    Route::post('/admin/reservations/{id}/confirm', function ($id) {
+        $reservation = Reservation::findOrFail($id);
+        if ($reservation->status === 'pending') {
+            $reservation->status = 'dikonfirmasi';
+            $reservation->save();
+            return redirect()->route('admin.reservations')->with('success', 'Pembayaran berhasil dikonfirmasi dan status reservasi menjadi dikonfirmasi.');
+        }
+        return redirect()->route('admin.reservations')->with('error', 'Status reservasi tidak dapat diubah.');
+    })->name('admin.reservations.confirm');
+
+    Route::get('/admin/users', function () {
+        $users = User::orderBy('created_at', 'desc')->get();
+        return view('admin.users', compact('users'));
+    })->name('admin.users');
 });
 
 // Authentication Routes

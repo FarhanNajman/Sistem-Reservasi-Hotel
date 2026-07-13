@@ -8,45 +8,38 @@
     
     <!-- Link CSS Utama -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    
-    <!-- Optional: custom admin styles if needed in future -->
-    <style>
-        .navbar.admin-navbar {
-            background-color: #1a1a2e; /* Darker theme for admin */
-        }
-        .navbar.admin-navbar .nav-links a {
-            color: #f1f1f1;
-        }
-        .navbar.admin-navbar .nav-item.active a {
-            color: #d4af37;
-        }
-    </style>
 </head>
-<body style="background-color: #f8f9fa;">
+<body>
 
     <!-- Navigation Bar Admin -->
-    <nav class="navbar admin-navbar" id="mainNavbar">
+    <nav class="navbar" id="mainNavbar">
         <a href="{{ route('admin.dashboard') }}" class="nav-logo">
-            <span style="color: #d4af37; font-size: 1.5rem; font-weight: bold; margin-left: 20px;">N★JM Admin</span>
+            <img src="{{ asset('gambar/logo/logoSudut.png') }}" alt="N★JM Hotel Logo" style="height: 120px; width: 140; object-fit: contain;">
         </a>
         
         <ul class="nav-links">
             <li class="nav-item">
-                <a href="{{ url('/') }}">Ke Halaman Depan</a>
+                <a href="{{ url('/reservasi_hotel') }}">Beranda</a>
             </li>
             <li class="nav-item {{ Request::is('admin/dashboard') ? 'active' : '' }}">
-                <a href="{{ route('admin.dashboard') }}">Kelola Kamar</a>
+                <a href="{{ route('admin.dashboard') }}">Dashboard Admin</a>
+            </li>
+            <li class="nav-item {{ Request::is('admin/reservations') ? 'active' : '' }}">
+                <a href="{{ route('admin.reservations') }}">Kelola Reservasi</a>
+            </li>
+            <li class="nav-item {{ Request::is('admin/users') ? 'active' : '' }}">
+                <a href="{{ route('admin.users') }}">Daftar Pengguna</a>
             </li>
             
-            <li class="nav-item" style="color: #e2e8f0; font-weight:500; display:flex; align-items:center; gap:6px;">
-                <i data-lucide="shield" style="width:16px; color:#d4af37;"></i>
-                {{ Auth::user()->username }}
+            <li class="nav-item" style="color: var(--text-muted); font-weight:500; display:flex; align-items:center; gap:6px;">
+                <i data-lucide="shield" style="width:16px; color:var(--primary-color);"></i>
+                {{ Auth::user()->username }} <span style="color:#d4af37;">(Admin)</span>
             </li>
 
             <li class="nav-item">
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
-                    <button type="submit" class="nav-btn" style="background: transparent; border: 1px solid #d4af37; color: #d4af37;">
+                    <button type="submit" class="nav-btn">
                         Logout
                     </button>
                 </form>
@@ -55,13 +48,30 @@
     </nav>
 
     <!-- Main Content -->
-    <main style="margin-top: 80px; min-height: calc(100vh - 80px - 80px); padding: 20px;">
+    <main style="margin-top: 80px; min-height: calc(100vh - 80px - 320px);">
         @yield('content')
     </main>
 
     <!-- Footer Admin -->
-    <footer style="background: #1a1a2e; color: #94a3b8; text-align: center; padding: 20px 0; font-size: 0.9rem;">
-        <p>&copy; {{ date('Y') }} N★JM Hotel - Admin Panel.</p>
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-col footer-about">
+                <h3>N★JM Hotel (Admin)</h3>
+                <p>Halaman ini dikhususkan untuk administrator mengelola data hotel.</p>
+                <p><i data-lucide="map-pin" style="display:inline; width:16px; margin-right:5px; vertical-align:middle;"></i> Jl. Kapalo Koto, Pauh, Padang</p>
+            </div>
+            
+            <div class="footer-col footer-contact">
+                <h3>Hubungi Kami</h3>
+                <p><i data-lucide="phone" style="width:16px;"></i> +6281372747968</p>
+                <p><i data-lucide="mail" style="width:16px;"></i> NajmHotelRacing@gmail.com</p>
+                <p><i data-lucide="clock" style="width:16px;"></i> Resepsionis 24 Jam</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; {{ date('Y') }} N★JM Hotel - Hak Akses Administrator.</p>
+        </div>
     </footer>
 
     <!-- Flash Messages (Toasts) -->
@@ -86,6 +96,16 @@
     <script>
         // Inisialisasi Lucide Icons
         lucide.createIcons();
+
+        // Efek navbar mengecil saat scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('mainNavbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
 
         // Auto close toasts setelah 4 detik
         setTimeout(function() {
