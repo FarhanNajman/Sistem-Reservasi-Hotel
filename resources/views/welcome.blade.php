@@ -55,54 +55,31 @@
     <!-- Room List Section -->
     <section class="section" id="kamar-section">
         <div class="section-header">
-            <h2>{{ $isSearch ? 'Hasil Pencarian Kamar' : 'Kamar & Pilihan Menginap' }}</h2>
-            <p>{{ $isSearch ? 'Kamar yang tersedia sesuai kriteria Anda.' : 'Pilihlah tipe kamar terbaik yang sesuai dengan kebutuhan perjalanan bisnis atau liburan keluarga Anda.' }}</p>
+            @if($isSearch)
+                <h2>Hasil Pencarian Kamar</h2>
+                <p>Kamar yang tersedia sesuai kriteria Anda.</p>
+            @else
+                <h2>Kamar Terbaru</h2>
+                <p>Jelajahi kamar-kamar terbaru kami dengan fasilitas yang baru diperbarui.</p>
+            @endif
         </div>
 
-        @if(!$isSearch)
-            <div class="tabs-header" style="display: flex; justify-content: center; gap: 15px; margin-bottom: 30px;">
-                <button type="button" class="tab-btn active" onclick="openTab(this, 'kamar-terbaru')">Kamar Terbaru</button>
-                <button type="button" class="tab-btn" onclick="openTab(this, 'semua-kamar')">Kamar</button>
-            </div>
-            
-            <div id="kamar-terbaru" class="tab-content active">
-                <div class="room-grid">
-                    @forelse($latestRooms as $room)
-                        @include('partials.room_card', ['room' => $room])
-                    @empty
-                        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: white; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
-                            <i data-lucide="help-circle" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 15px;"></i>
-                            <h3>Belum ada kamar terbaru</h3>
-                        </div>
-                    @endforelse
-                </div>
-            </div>
-            
-            <div id="semua-kamar" class="tab-content" style="display: none;">
-                <div class="room-grid">
-                    @forelse($rooms as $room)
-                        @include('partials.room_card', ['room' => $room])
-                    @empty
-                        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: white; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
-                            <i data-lucide="help-circle" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 15px;"></i>
-                            <h3>Belum ada kamar tersedia</h3>
-                        </div>
-                    @endforelse
-                </div>
-            </div>
-        @else
-            <div class="room-grid">
-                @forelse($rooms as $room)
-                    @include('partials.room_card', ['room' => $room])
-                @empty
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: white; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+        <div class="room-grid">
+            @forelse($isSearch ? $rooms : $latestRooms as $room)
+                @include('partials.room_card', ['room' => $room])
+            @empty
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: white; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+                    @if($isSearch)
                         <i data-lucide="search-x" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 15px;"></i>
                         <h3>Kamar tidak ditemukan</h3>
-                        <p>Coba ubah tanggal atau kriteria pencarian lainnya.</p>
-                    </div>
-                @endforelse
-            </div>
-        @endif
+                        <p>Coba ubah jumlah tamu, tipe kamar, atau lantai lainnya.</p>
+                    @else
+                        <i data-lucide="help-circle" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 15px;"></i>
+                        <h3>Belum ada kamar terbaru</h3>
+                    @endif
+                </div>
+            @endforelse
+        </div>
     </section>
 
     <!-- Services / Amenities Section -->
@@ -149,36 +126,6 @@
 @endsection
 
 @section('scripts')
-    <script>
-        // Tab Logic
-        function openTab(btnElement, tabName) {
-            let i, tabcontent, tablinks;
-            
-            tabcontent = document.getElementsByClassName("tab-content");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-                tabcontent[i].classList.remove("active");
-            }
-            
-            tablinks = document.getElementsByClassName("tab-btn");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].classList.remove("active");
-            }
-            
-            const activeContent = document.getElementById(tabName);
-            if (activeContent) {
-                activeContent.style.display = "block";
-                
-                // Force reflow before adding active class for animation
-                void activeContent.offsetWidth;
-                activeContent.classList.add("active");
-            }
-            
-            if (btnElement) {
-                btnElement.classList.add("active");
-            }
-        }
-    </script>
     @if($isSearch)
     <script>
         // Auto scroll to results when search is performed

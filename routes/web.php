@@ -16,7 +16,7 @@ Route::redirect('/', '/reservasi_hotel');
 Route::prefix('reservasi_hotel')->group(function () {
     Route::get('/', function () {
         $rooms = Room::all();
-        $latestRooms = Room::orderBy('created_at', 'desc')->take(3)->get();
+        $latestRooms = Room::orderBy('created_at', 'desc')->take(4)->get();
         $roomTypes = Room::select('tipe_kamar')->distinct()->pluck('tipe_kamar');
         $roomFloors = Room::select('lantai')->distinct()->orderBy('lantai')->pluck('lantai');
         $isSearch = false;

@@ -19,8 +19,11 @@
         </a>
         
         <ul class="nav-links">
-            <li class="nav-item {{ Request::is('reservasi_hotel*') ? 'active' : '' }}">
+            <li class="nav-item {{ Request::is('reservasi_hotel') ? 'active' : '' }}">
                 <a href="{{ url('/reservasi_hotel') }}">Beranda</a>
+            </li>
+            <li class="nav-item {{ Request::is('reservasi_hotel/semua-kamar') ? 'active' : '' }}">
+                <a href="{{ route('rooms.semua') }}">Kamar</a>
             </li>
             <!-- Lacak Reservasi removed -->
             @auth
