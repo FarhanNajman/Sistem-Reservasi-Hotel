@@ -68,18 +68,15 @@
     document.addEventListener('DOMContentLoaded', function() {
         const passwordInput = document.getElementById('password');
         const passwordToggle = document.getElementById('passwordToggle');
-        const eyeIcon = document.getElementById('eyeIcon');
 
         passwordToggle.addEventListener('click', function() {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
             
             // Ubah icon Lucide
-            if (type === 'text') {
-                eyeIcon.setAttribute('data-lucide', 'eye-off');
-            } else {
-                eyeIcon.setAttribute('data-lucide', 'eye');
-            }
+            passwordToggle.innerHTML = type === 'text' 
+                ? '<i data-lucide="eye-off"></i>' 
+                : '<i data-lucide="eye"></i>';
             
             // Re-render icon lucide yang berubah secara dinamis
             if (typeof lucide !== 'undefined') {

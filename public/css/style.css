@@ -837,7 +837,7 @@ a {
 }
 
 .auth-header img {
-    height: 80px;
+    height: 120px;
     width: auto;
     object-fit: contain;
     margin-bottom: 15px;
@@ -872,7 +872,8 @@ a {
     position: relative;
 }
 
-.auth-form .form-group .input-wrapper i {
+.auth-form .form-group .input-wrapper > i,
+.auth-form .form-group .input-wrapper > svg {
     position: absolute;
     left: 14px;
     top: 50%;
@@ -902,7 +903,8 @@ a {
     box-shadow: 0 0 0 3px var(--primary-light);
 }
 
-.auth-form .form-group input:focus + i {
+.auth-form .form-group input:focus + i,
+.auth-form .form-group input:focus + svg {
     color: var(--primary-color);
 }
 

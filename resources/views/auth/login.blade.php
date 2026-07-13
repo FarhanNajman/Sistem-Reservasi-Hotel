@@ -80,7 +80,6 @@
     document.addEventListener('DOMContentLoaded', function() {
         const passwordInput = document.getElementById('password');
         const passwordToggle = document.getElementById('passwordToggle');
-        const eyeIcon = document.getElementById('eyeIcon');
         const loginTypeInput = document.getElementById('login_type');
         const loginTypeButtons = document.querySelectorAll('.login-type-btn');
 
@@ -103,11 +102,9 @@
                 const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
                 passwordInput.setAttribute('type', type);
 
-                if (type === 'text') {
-                    eyeIcon.setAttribute('data-lucide', 'eye-off');
-                } else {
-                    eyeIcon.setAttribute('data-lucide', 'eye');
-                }
+                passwordToggle.innerHTML = type === 'text' 
+                    ? '<i data-lucide="eye-off"></i>' 
+                    : '<i data-lucide="eye"></i>';
 
                 if (typeof lucide !== 'undefined') {
                     lucide.createIcons();
