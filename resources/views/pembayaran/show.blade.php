@@ -47,18 +47,70 @@
         </div>
         
         <div style="background: white; border-radius: var(--radius-lg); padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-            <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 1.1rem; color: var(--text-dark);">Metode Pembayaran (Simulasi)</h3>
+            <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 1.1rem; color: var(--text-dark);">Metode Pembayaran</h3>
             
             <form action="{{ route('pembayaran.proses', $reservation->id) }}" method="POST">
                 @csrf
                 
-                <div style="border: 1px solid var(--primary-color); border-radius: 8px; padding: 15px; margin-bottom: 20px; background-color: rgba(212, 175, 55, 0.05); display: flex; align-items: center; cursor: pointer;">
-                    <input type="radio" id="bank_transfer" name="payment_method" value="bank_transfer" checked style="margin-right: 15px; width: 18px; height: 18px;">
-                    <label for="bank_transfer" style="flex: 1; cursor: pointer;">
-                        <span style="display: block; font-weight: 600; color: var(--text-dark);">Transfer Bank (Virtual Account)</span>
-                        <span style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Instan dan otomatis diverifikasi</span>
-                    </label>
-                    <i data-lucide="building-2" style="color: var(--primary-color);"></i>
+                <!-- E-Wallet Accordion -->
+                <div style="border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 25px; overflow: hidden; background: white;">
+                    <!-- Header -->
+                    <div id="ewallet-header" style="padding: 15px 20px; display: flex; flex-direction: column; cursor: pointer; user-select: none;" onclick="toggleEwallet()">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <span style="font-weight: 600; color: var(--text-dark); font-size: 1.1rem;">E-wallet</span>
+                            <i id="ewallet-chevron" data-lucide="chevron-down" style="width: 24px; height: 24px; color: var(--text-dark); transition: transform 0.3s;"></i>
+                        </div>
+                        <!-- Collapsed Icons -->
+                        <div id="ewallet-icons" style="display: flex; gap: 15px;">
+                            <img src="{{ asset('gambar/pembayaran/Gopay.jpg') }}" alt="GoPay" style="width: 40px; height: 40px; border-radius: 8px; object-fit: contain; border: 1px solid #f1f5f9;">
+                            <img src="{{ asset('gambar/pembayaran/Dana.jpg') }}" alt="DANA" style="width: 40px; height: 40px; border-radius: 8px; object-fit: contain; border: 1px solid #f1f5f9;">
+                            <img src="{{ asset('gambar/pembayaran/shopeePay.jpg') }}" alt="ShopeePay" style="width: 40px; height: 40px; border-radius: 8px; object-fit: contain; border: 1px solid #f1f5f9;">
+                        </div>
+                    </div>
+                    
+                    <!-- Expanded Body -->
+                    <div id="ewallet-body" style="display: none; padding: 0 20px 10px 20px;">
+                        
+                        <!-- GoPay -->
+                        <label for="gopay" style="display: flex; align-items: center; justify-content: space-between; padding: 15px 0; border-top: 1px solid #f1f5f9; cursor: pointer;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <img src="{{ asset('gambar/pembayaran/Gopay.jpg') }}" alt="GoPay" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px; border: 1px solid #f1f5f9;">
+                                <div>
+                                    <span style="display: block; font-weight: 600; color: var(--text-dark); margin-bottom: 4px;">GoPay</span>
+                                    
+                                
+                                    </span>
+                                </div>
+                            </div>
+                            <input type="radio" id="gopay" name="payment_method" value="gopay" checked style="width: 22px; height: 22px; accent-color: var(--text-dark); cursor: pointer;">
+                        </label>
+
+                        <!-- DANA -->
+                        <label for="dana" style="display: flex; align-items: center; justify-content: space-between; padding: 15px 0; border-top: 1px solid #f1f5f9; cursor: pointer;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <img src="{{ asset('gambar/pembayaran/Dana.jpg') }}" alt="DANA" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px; border: 1px solid #f1f5f9;">
+                                <div>
+                                    <span style="display: block; font-weight: 600; color: var(--text-dark); margin-bottom: 4px;">DANA</span>
+                                    
+                                        
+                                    </span>
+                                </div>
+                            </div>
+                            <input type="radio" id="dana" name="payment_method" value="dana" style="width: 22px; height: 22px; accent-color: var(--text-dark); cursor: pointer;">
+                        </label>
+
+                        <!-- ShopeePay -->
+                        <label for="shopeepay" style="display: flex; align-items: center; justify-content: space-between; padding: 15px 0; border-top: 1px solid #f1f5f9; cursor: pointer;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <img src="{{ asset('gambar/pembayaran/shopeePay.jpg') }}" alt="ShopeePay" style="width: 45px; height: 45px; object-fit: contain; border-radius: 8px; border: 1px solid #f1f5f9;">
+                                <div>
+                                    <span style="display: block; font-weight: 600; color: var(--text-dark); margin-bottom: 4px;">ShopeePay</span>
+                                    
+                                </div>
+                            </div>
+                            <input type="radio" id="shopeepay" name="payment_method" value="shopeepay" style="width: 22px; height: 22px; accent-color: var(--text-dark); cursor: pointer;">
+                        </label>
+                    </div>
                 </div>
                 
                 <button type="submit" style="width: 100%; padding: 16px; background-color: #0f172a; color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;" onmouseover="this.style.backgroundColor='#1e293b'" onmouseout="this.style.backgroundColor='#0f172a'">
@@ -69,4 +121,26 @@
 
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    function toggleEwallet() {
+        const body = document.getElementById('ewallet-body');
+        const chevron = document.getElementById('ewallet-chevron');
+        const icons = document.getElementById('ewallet-icons');
+        
+        if (body.style.display === 'none') {
+            body.style.display = 'block';
+            chevron.style.transform = 'rotate(180deg)';
+            icons.style.display = 'none';
+            // Also focus the first radio to make it active visually
+            document.getElementById('gopay').checked = true;
+        } else {
+            body.style.display = 'none';
+            chevron.style.transform = 'rotate(0deg)';
+            icons.style.display = 'flex';
+        }
+    }
+</script>
 @endsection
