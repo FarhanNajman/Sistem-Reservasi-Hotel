@@ -175,13 +175,13 @@ Route::middleware('auth')->group(function () {
 
     // Menampilkan halaman pembayaran
     Route::get('/pembayaran/{id}', function ($id) {
-        $reservation = Reservation::where('id', $id)->where('email_tamu', Auth::user()->email)->firstOrFail();
+        $reservation = Reservation::findOrFail($id);
         return view('pembayaran.show', compact('reservation'));
     })->name('pembayaran.show');
 
     // Memproses pembayaran
     Route::post('/pembayaran/{id}/proses', function ($id) {
-        $reservation = Reservation::where('id', $id)->where('email_tamu', Auth::user()->email)->firstOrFail();
+        $reservation = Reservation::findOrFail($id);
         
         // Simulasi sukses pembayaran, ubah status jadi dikonfirmasi (atau dibayar)
         $reservation->update([

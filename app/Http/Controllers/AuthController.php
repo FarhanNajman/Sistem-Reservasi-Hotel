@@ -110,12 +110,8 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        Auth::login($user);
-
-        $request->session()->regenerate();
-
-        return redirect('/reservasi_hotel')
-            ->with('success', 'Akun Anda berhasil didaftarkan dan Anda telah masuk!');
+        return redirect('/login')
+            ->with('success', 'Akun Anda berhasil didaftarkan! Silakan login untuk melanjutkan.');
     }
 
     /**
