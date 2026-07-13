@@ -199,6 +199,7 @@ a {
 .hero-content h1 span {
     color: var(--primary-color);
     background: linear-gradient(120deg, #3761d4, #f3e5ab);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -520,14 +521,18 @@ a {
     font-weight: 600;
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
+    z-index: 2;
 }
 
-
-.room-badge.perbaikan {
-    background-color: #ef4444;
+.room-badge.tersedia {
+    background-color: #16a34a;
 }
 
 .room-badge.penuh {
+    background-color: #ef4444;
+}
+
+.room-badge.perbaikan {
     background-color: #f59e0b;
 }
 

@@ -65,6 +65,13 @@
                         </div>
                     </div>
                     <div class="spec-item">
+                        <i data-lucide="building-2"></i>
+                        <div>
+                            <h5>Lantai</h5>
+                            <p>Lantai {{ $room->lantai }}</p>
+                        </div>
+                    </div>
+                    <div class="spec-item">
                         <i data-lucide="users"></i>
                         <div>
                             <h5>Kapasitas Maksimal</h5>
@@ -151,6 +158,10 @@
                         @else
                             <span class="status-badge-inline perbaikan">Sedang Dipelihara</span>
                         @endif
+                    </div>
+                    <div class="sidebar-feature-row">
+                        <span class="feature-label">Posisi Kamar</span>
+                        <span class="feature-val">Lantai {{ $room->lantai }}</span>
                     </div>
                     <div class="sidebar-feature-row">
                         <span class="feature-label">Maksimal Tamu</span>

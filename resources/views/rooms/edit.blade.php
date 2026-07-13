@@ -28,8 +28,18 @@
             </div>
 
             <div class="form-group">
+                <label for="lantai">Lantai</label>
+                <select name="lantai" id="lantai" required>
+                    <option value="1" {{ old('lantai', $room->lantai) == '1' ? 'selected' : '' }}>Lantai 1</option>
+                    <option value="2" {{ old('lantai', $room->lantai) == '2' ? 'selected' : '' }}>Lantai 2</option>
+                    <option value="3" {{ old('lantai', $room->lantai) == '3' ? 'selected' : '' }}>Lantai 3</option>
+                </select>
+            </div>
+
+            <div class="form-group">
                 <label for="nomor_kamar">Nomor Kamar</label>
-                <input type="text" name="nomor_kamar" id="nomor_kamar" value="{{ old('nomor_kamar', $room->nomor_kamar) }}" required>
+                <input type="text" name="nomor_kamar" id="nomor_kamar" value="{{ old('nomor_kamar', $room->nomor_kamar) }}" placeholder="Contoh: 05" required>
+                <p style="margin-top: 6px; color: #6b7280; font-size: 0.95rem;">Nomor kamar akan otomatis diawali dengan angka lantai yang dipilih, misalnya lantai 2 menjadi 205.</p>
             </div>
 
             <div class="form-group">

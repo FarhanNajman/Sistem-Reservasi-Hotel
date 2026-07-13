@@ -11,6 +11,7 @@ class Room extends Model
 
     protected $fillable = [
         'nomor_kamar',
+        'lantai',
         'tipe_kamar',
         'harga_per_malam',
         'kapasitas',
@@ -18,6 +19,17 @@ class Room extends Model
         'foto_kamar',
         'status',
     ];
+
+    public static function normalizeNomorKamar(int $lantai, string $nomorKamar): string
+    {
+        $digits = preg_replace('/\D/', '', $nomorKamar) ?: '01';
+
+        if (strlen($digits) >= 2 && str_starts_with($digits, (string) $lantai)) {
+            return $digits;
+        }
+
+        return (string) $lantai . str_pad(substr($digits, -2), 2, '0', STR_PAD_LEFT);
+    }
 
     /**
      * Get the reservations for the room.

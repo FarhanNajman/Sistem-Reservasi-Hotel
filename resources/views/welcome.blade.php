@@ -61,6 +61,14 @@
                                 <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80" alt="Default Room Image" class="room-img">
                             @endif
                         </a>
+
+                        @if($room->status === 'tersedia')
+                            <span class="room-badge tersedia">Tersedia</span>
+                        @elseif($room->status === 'penuh')
+                            <span class="room-badge penuh">Penuh</span>
+                        @else
+                            <span class="room-badge perbaikan">Perbaikan</span>
+                        @endif
                     </div>
                     
                     <div class="room-details">
@@ -68,7 +76,7 @@
                             <h3 class="room-type">
                                 <a href="{{ route('rooms.show', $room->id) }}" class="room-title-link">{{ $room->tipe_kamar }}</a>
                             </h3>
-                            <span class="room-number">Kamar No. {{ $room->nomor_kamar }}</span>
+                            <span class="room-number">Lantai {{ $room->lantai }} • No. {{ $room->nomor_kamar }}</span>
                         </div>
                         
                         <ul class="room-features">

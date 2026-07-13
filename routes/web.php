@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Models\Room;
 use App\Models\Reservation;
 use App\Http\Controllers\AuthController;
@@ -63,15 +64,27 @@ Route::post('/reservasi_hotel/kamar', function (Request $request) {
         abort(403);
     }
 
+    $request->merge([
+        'nomor_kamar' => Room::normalizeNomorKamar((int) $request->input('lantai'), (string) $request->input('nomor_kamar')),
+    ]);
+
     $validated = $request->validate([
         'tipe_kamar' => 'required|string|max:255',
-        'nomor_kamar' => 'required|string|max:100|unique:rooms,nomor_kamar',
+        'lantai' => 'required|integer|min:1|max:3',
+        'nomor_kamar' => [
+            'required',
+            'string',
+            'max:100',
+            Rule::unique('rooms', 'nomor_kamar')->where(fn ($query) => $query->where('lantai', (int) $request->input('lantai'))),
+        ],
         'kapasitas' => 'required|integer|min:1',
         'harga_per_malam' => 'required|numeric|min:0',
         'status' => 'required|in:tersedia,penuh,perbaikan',
         'deskripsi' => 'nullable|string',
         'foto_kamar' => 'nullable|string',
         'foto_kamar_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
+    ], [
+        'nomor_kamar.unique' => 'Nomor kamar sudah ada untuk lantai ini.',
     ]);
 
     if ($request->hasFile('foto_kamar_upload')) {
@@ -100,15 +113,27 @@ Route::post('/reservasi_hotel/kamar/{id}/update', function (Request $request, $i
 
     $room = Room::findOrFail($id);
 
+    $request->merge([
+        'nomor_kamar' => Room::normalizeNomorKamar((int) $request->input('lantai'), (string) $request->input('nomor_kamar')),
+    ]);
+
     $validated = $request->validate([
         'tipe_kamar' => 'required|string|max:255',
-        'nomor_kamar' => 'required|string|max:100',
+        'lantai' => 'required|integer|min:1|max:3',
+        'nomor_kamar' => [
+            'required',
+            'string',
+            'max:100',
+            Rule::unique('rooms', 'nomor_kamar')->where(fn ($query) => $query->where('lantai', (int) $request->input('lantai')))->ignore($room->id),
+        ],
         'kapasitas' => 'required|integer|min:1',
         'harga_per_malam' => 'required|numeric|min:0',
         'status' => 'required|in:tersedia,penuh,perbaikan',
         'deskripsi' => 'nullable|string',
         'foto_kamar' => 'nullable|string',
         'foto_kamar_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
+    ], [
+        'nomor_kamar.unique' => 'Nomor kamar sudah ada untuk lantai ini.',
     ]);
 
     if ($request->hasFile('foto_kamar_upload')) {
