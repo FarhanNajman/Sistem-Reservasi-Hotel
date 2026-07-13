@@ -59,15 +59,24 @@ Route::get('/reservasi/cari', function (Request $request) {
         $query->where('lantai', $lantai);
     }
 
-    if ($checkIn && $checkOut) {
-        $query->whereDoesntHave('reservations', function ($q) use ($checkIn, $checkOut) {
-            $q->where('tanggal_check_in', '<', $checkOut)
-              ->where('tanggal_check_out', '>', $checkIn)
-              ->whereIn('status', ['pending', 'dikonfirmasi']);
-        });
-    }
-
     $rooms = $query->get();
+
+    if ($checkIn && $checkOut) {
+        foreach ($rooms as $room) {
+            // Cek apakah ada reservasi yang tumpang tindih
+            $isBooked = $room->reservations()
+                ->where('tanggal_check_in', '<', $checkOut)
+                ->where('tanggal_check_out', '>', $checkIn)
+                ->whereIn('status', ['pending', 'dikonfirmasi', 'check_in'])
+                ->exists();
+                
+            if ($isBooked) {
+                $room->status = 'penuh';
+            } else {
+                $room->status = 'tersedia';
+            }
+        }
+    }
     $latestRooms = collect(); // Kosongkan pada saat pencarian
     $roomTypes = Room::select('tipe_kamar')->distinct()->pluck('tipe_kamar');
     $roomFloors = Room::select('lantai')->distinct()->orderBy('lantai')->pluck('lantai');

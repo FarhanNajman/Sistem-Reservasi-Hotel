@@ -9,6 +9,10 @@
         <p>Jelajahi koleksi kamar kami untuk menemukan pilihan menginap yang paling sesuai dengan kebutuhan Anda.</p>
     </div>
 
+    <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 40px; margin-top: 10px;">
+        @include('partials.search_bar', ['noMarginTop' => true])
+    </div>
+
     <div class="room-grid">
         @forelse($rooms as $room)
             @include('partials.room_card', ['room' => $room])

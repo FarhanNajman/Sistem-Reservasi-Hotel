@@ -8,13 +8,9 @@
             @endif
         </a>
 
-        @if($room->status === 'tersedia')
-            <span class="room-badge tersedia">Tersedia</span>
-        @elseif($room->status === 'penuh')
-            <span class="room-badge penuh">Penuh</span>
-        @else
-            <span class="room-badge perbaikan">Perbaikan</span>
-        @endif
+        <div class="room-badge {{ $room->status == 'tersedia' ? 'tersedia' : (($room->status == 'penuh') ? 'penuh' : 'perbaikan') }}">
+            {{ ucfirst($room->status) }}
+        </div>
     </div>
     
     <div class="room-details">
@@ -40,7 +36,11 @@
             </div>
             
             <div class="room-actions">
-                <a href="{{ route('rooms.show',$room->id) }}" class="room-detail-btn">Pesan Sekarang</a>
+                @if($room->status == 'penuh' || $room->status == 'perbaikan')
+                    <button class="room-detail-btn" style="opacity: 0.5; cursor: not-allowed; background-color: var(--text-muted); color: white;" disabled>Penuh</button>
+                @else
+                    <a href="{{ route('rooms.show', $room->id) . (request('check_in') ? '?check_in='.request('check_in').'&check_out='.request('check_out') : '') }}" class="room-detail-btn">Pesan Sekarang</a>
+                @endif
             </div>
         </div>
     </div>
