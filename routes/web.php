@@ -149,7 +149,7 @@ Route::middleware('auth')->group(function () {
 
         $totalHarga = $hari * $room->harga_per_malam;
 
-        Reservation::create([
+        $reservation = Reservation::create([
             'kode_booking' => 'BKG-' . strtoupper(Str::random(6)),
             'nama_tamu' => $validated['nama_tamu'],
             'email_tamu' => $validated['email_tamu'], // Menyimpan email dari input manual form
@@ -162,8 +162,26 @@ Route::middleware('auth')->group(function () {
             'catatan' => $validated['catatan'],
         ]);
 
-        return redirect()->route('reservasi.saya')->with('success', 'Reservasi berhasil dibuat! Silakan tunggu konfirmasi.');
+        return redirect()->route('pembayaran.show', $reservation->id);
     });
+
+    // Menampilkan halaman pembayaran
+    Route::get('/pembayaran/{id}', function ($id) {
+        $reservation = Reservation::where('id', $id)->where('email_tamu', Auth::user()->email)->firstOrFail();
+        return view('pembayaran.show', compact('reservation'));
+    })->name('pembayaran.show');
+
+    // Memproses pembayaran
+    Route::post('/pembayaran/{id}/proses', function ($id) {
+        $reservation = Reservation::where('id', $id)->where('email_tamu', Auth::user()->email)->firstOrFail();
+        
+        // Simulasi sukses pembayaran, ubah status jadi dikonfirmasi (atau dibayar)
+        $reservation->update([
+            'status' => 'dikonfirmasi'
+        ]);
+
+        return redirect()->route('reservasi.saya')->with('success', 'Pembayaran berhasil! Reservasi Anda telah dikonfirmasi.');
+    })->name('pembayaran.proses');
 
     // Menampilkan halaman reservasi saya
     Route::get('/reservasi-saya', function () {
