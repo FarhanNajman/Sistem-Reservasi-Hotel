@@ -105,6 +105,9 @@
             <a href="{{ route('admin.users') }}" class="sidebar-link {{ Request::is('admin/users') ? 'active' : '' }}">
                 <i data-lucide="users"></i> Daftar Pengguna
             </a>
+            <a href="{{ route('admin.statistik') }}" class="sidebar-link {{ Request::is('admin/statistik') ? 'active' : '' }}">
+                <i data-lucide="bar-chart-2"></i> Statistik Hunian
+            </a>
         </nav>
 
         <div class="sidebar-footer">

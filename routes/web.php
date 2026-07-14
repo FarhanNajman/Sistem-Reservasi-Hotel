@@ -111,6 +111,55 @@ Route::middleware('role:admin')->group(function () {
         $users = User::orderBy('created_at', 'desc')->get();
         return view('admin.users', compact('users'));
     })->name('admin.users');
+
+    Route::get('/admin/statistik', function () {
+        // Ambil data reservasi yang statusnya dikonfirmasi, check_in, check_out, atau selesai
+        $reservations = \App\Models\Reservation::whereIn('status', ['dikonfirmasi', 'check_in', 'check_out'])->get();
+        
+        $stats = $reservations->groupBy(function($val) {
+            return \Carbon\Carbon::parse($val->created_at)->format('Y-m');
+        })->map(function($row) {
+            return $row->count();
+        });
+
+        // Urutkan key (bulan) secara ascending
+        $stats = $stats->sortKeys();
+
+        $labels = [];
+        $data = [];
+        
+        foreach($stats as $month => $count) {
+            $labels[] = \Carbon\Carbon::parse($month . '-01')->translatedFormat('F Y');
+            $data[] = $count;
+        }
+
+        return view('admin.statistik', compact('labels', 'data'));
+    })->name('admin.statistik');
+
+    Route::get('/admin/statistik/cetak', function () {
+        $reservations = \App\Models\Reservation::whereIn('status', ['dikonfirmasi', 'check_in', 'check_out'])->get();
+        
+        $stats = $reservations->groupBy(function($val) {
+            return \Carbon\Carbon::parse($val->created_at)->format('Y-m');
+        })->map(function($row) {
+            return $row->count();
+        });
+
+        $stats = $stats->sortKeys();
+
+        $laporanData = [];
+        $totalSemua = 0;
+        foreach($stats as $month => $count) {
+            $laporanData[] = [
+                'bulan' => \Carbon\Carbon::parse($month . '-01')->translatedFormat('F Y'),
+                'total' => $count
+            ];
+            $totalSemua += $count;
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.statistik_pdf', compact('laporanData', 'totalSemua'));
+        return $pdf->stream('laporan-hunian-bulanan.pdf');
+    })->name('admin.statistik.pdf');
 });
 
 // Authentication Routes
