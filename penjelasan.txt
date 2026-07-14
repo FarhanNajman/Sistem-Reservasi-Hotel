@@ -1,0 +1,116 @@
+PENJELASAN RINCI SISTEM RESERVASI HOTEL (LARAVEL)
+
+A. GAMBARAN UMUM
+Sistem ini adalah sebuah aplikasi web "Sistem Reservasi Hotel" yang dibangun menggunakan framework PHP Laravel. Aplikasi ini dirancang untuk melayani dua jenis pengguna: Tamu (Guest/User) yang ingin mencari dan memesan kamar, serta Administrator (Admin) yang bertugas mengelola kamar, memvalidasi pembayaran, dan melihat laporan operasional hotel. 
+
+Sistem telah dilengkapi dengan autentikasi, manajemen file upload (untuk foto kamar dan bukti bayar), dan kemampuan menghasilkan dokumen PDF (untuk invoice dan laporan).
+
+B. ROLE PENGGUNA & HAK AKSES
+Sistem membagi pengguna ke dalam dua tingkatan (role) menggunakan sistem Middleware:
+1. User / Tamu: Pengguna biasa yang mendaftar lewat halaman Register. Hak aksesnya terbatas pada profilnya sendiri, melakukan pencarian, pemesanan, pembayaran, dan melihat riwayat pemesanan.
+2. Admin: Pengguna dengan hak akses khusus (dilindungi oleh RoleMiddleware). Memiliki kontrol penuh terhadap data master (Kamar) dan data transaksi (Reservasi), serta dapat mengakses halaman Dashboard Admin.
+
+C. FITUR-FITUR UNTUK TAMU (GUEST & USER)
+1. Landing Page & Pencarian Kamar Cerdas:
+   - Pengunjung dapat melihat daftar "Kamar Terbaru" dan "Semua Kamar".
+   - Pengunjung dapat melakukan filter/pencarian kamar berdasarkan: Tanggal Check-in & Check-out, Jumlah Tamu (kapasitas), Tipe Kamar, dan Lantai.
+   - Sistem memiliki logika pengecekan ketersediaan (Availability Check): Jika pada rentang tanggal Check-in dan Check-out yang dicari ternyata kamar tersebut sudah dipesan orang lain (status pending/dikonfirmasi), maka kamar otomatis ditampilkan dengan status "Penuh".
+
+2. Detail Kamar:
+   - Menampilkan detail informasi lengkap sebuah kamar seperti: Foto ruangan, Denah kamar (layout), Harga per malam, Kapasitas, Lantai, Fasilitas kamar (berupa list array), dan Deskripsi.
+
+3. Proses Pemesanan (Booking) Kamar:
+   - Setelah login, tamu dapat memesan kamar yang "Tersedia".
+   - Tamu mengisi form detail tanggal check-in, check-out, dan data diri.
+   - Sistem secara otomatis menghitung `total_harga` (selisih hari x harga per malam).
+   - Sistem akan menghasilkan `kode_booking` unik dengan format spesifik (contoh: RSV-LT1N01-260713) berdasarkan lantai, nomor kamar, dan tanggal.
+
+4. Proses Pembayaran:
+   - Setelah memesan, status pesanan menjadi "menunggu_pembayaran".
+   - Tamu akan diarahkan ke halaman pembayaran (menyediakan opsi seperti scan QR Code).
+   - Tamu harus mengunggah (upload) gambar Bukti Pembayaran.
+   - Setelah diunggah, status berubah menjadi "pending" menunggu admin menyetujui.
+
+5. Riwayat & Invoice (Struk):
+   - Tamu memiliki menu "Reservasi Saya" untuk melacak seluruh transaksi yang pernah dilakukan.
+   - Tamu dapat melihat Invoice elektronik dan Mengunduhnya (Download) dalam bentuk format file PDF.
+
+D. FITUR-FITUR UNTUK ADMINISTRATOR
+1. Manajemen Kamar (CRUD):
+   - Admin dapat Menambah (Create), Mengedit (Update), dan Menghapus (Delete) kamar.
+   - Admin dapat mengunggah (upload) "Foto Kamar" dan "Denah Kamar".
+   - Terdapat validasi cerdas: Nomor kamar harus unik pada lantai yang sama. Sistem juga memiliki fungsi normalisasi penomoran kamar (contoh: kamar di lantai 2 akan dinormalisasi menjadi 201, 202, dst).
+
+2. Manajemen Reservasi (Validasi Pembayaran):
+   - Admin dapat melihat tabel seluruh pemesanan masuk.
+   - Jika tamu sudah mengunggah bukti bayar, admin dapat mengeceknya dan menekan tombol "Konfirmasi". Tindakan ini mengubah status pemesanan tamu menjadi "dikonfirmasi" (Lunas).
+
+3. Daftar Pengguna:
+   - Admin dapat memantau siapa saja user yang telah terdaftar dalam sistem.
+
+4. Laporan Statistik Reservasi:
+   - Admin memiliki halaman "Statistik" yang menampilkan grafik/data jumlah reservasi yang sukses (dikonfirmasi/check-in/check-out) per bulannya.
+   - Admin dapat men-Cetak (Download) Laporan Hunian Bulanan ini ke dalam format PDF.
+
+E. STRUKTUR DATABASE (MODEL & RELASI)
+1. Tabel `users`: Menyimpan data kredensial login (nama, email, password, role).
+2. Tabel `rooms`: Menyimpan master data kamar. Field utamanya meliputi: nomor_kamar, lantai, tipe_kamar, harga_per_malam, kapasitas, foto_kamar, denah_kamar, status, dan fasilitas. (Fasilitas disimpan dengan format array/JSON).
+3. Tabel `reservations`: Menyimpan data transaksi. Memiliki relasi *BelongsTo* ke `rooms` (satu reservasi merujuk pada satu kamar tertentu). Menyimpan data check-in, check-out, kode booking, bukti_pembayaran, dan berbagai tahap status reservasi.
+
+F. TEKNOLOGI TAMBAHAN YANG DIGUNAKAN
+- Barryvdh\DomPDF: Digunakan di sisi backend untuk mengonversi tampilan HTML/Blade menjadi file PDF (untuk fitur Cetak Invoice dan Cetak Laporan Statistik).
+- File Storage Disk ('public'): Digunakan oleh Laravel untuk menyimpan semua aset hasil upload (foto kamar, denah kamar, dan bukti transfer pembayaran).
+- Blade Templating: Mengatur tata letak (layout) UI aplikasi web.
+
+G. FUNGSI FILE-FILE UTAMA & LOGIKA KODE (CODE LOGIC)
+Berikut adalah penjelasan mengenai file-file kunci dalam sistem beserta fungsi kode di dalamnya:
+
+1. `routes/web.php`
+   - Fungsi: Menjadi pusat pengatur alur navigasi (Routing) aplikasi.
+   - Logika Penting:
+     * Menyediakan logika cerdas (closure) pada rute `/semua-kamar` untuk melakukan pencarian (`Query Builder`) sekaligus Availability Check. Kamar di-looping dan dicek apakah relasi reservasinya saling tumpang tindih dengan rentang tanggal check-in & check-out.
+     * Mengatur logika pemesanan (`/reservasi/pesan/{id}`), melakukan perhitungan otomatis total_harga berdasarkan selisih tanggal (`diffInDays` menggunakan library Carbon), serta men-generate kode booking yang selalu unique (unik) agar tidak ada yang ganda.
+     * Memilah akses menggunakan grup Middleware (`auth` untuk tamu yang sudah login dan `role:admin` khusus admin).
+
+2. `app/Http/Controllers/AuthController.php`
+   - Fungsi: Mengurus proses pendaftaran (Register), masuk (Login), dan keluar (Logout) pengguna.
+   - Logika Penting:
+     * Validasi login yang ketat dengan mengecek tipe akses. Jika tamu (role: user) memaksakan login lewat mode admin, maka AuthController akan otomatis memblokirnya dan melempar pesan ValidationException.
+     * Memakai metode `Auth::attempt` untuk mencocokkan user dan password.
+
+3. `app/Http/Middleware/RoleMiddleware.php`
+   - Fungsi: Pelindung URL spesifik dari pengguna yang tidak berwenang.
+   - Logika Penting:
+     * Menjalankan validasi bertingkat sebelum merender tampilan: Pertama mengecek status login. Kedua mengecek hak akses (Role). Jika user biasa meretas URL yang ditujukan untuk admin, Middleware me-redirect-nya kembali ke beranda atau memunculkan status dilarang (abort 403).
+
+4. `app/Models/Room.php`
+   - Fungsi: Model Eloquent representasi tabel `rooms`.
+   - Logika Penting:
+     * Mendeklarasikan `casts` fasilitas menjadi `array`. Ini memastikan data berbentuk teks JSON di database langsung dikenali sebagai array (Daftar) oleh PHP.
+     * Menyimpan fungsi custom (Static Function) `normalizeNomorKamar` yang memastikan penamaan nomor kamar selaras (sinkron) dengan lantainya secara otomatis (misal: lantai 2 dengan nomor urut 1 akan dikonversi menjadi '201').
+     * Membentuk relasi `reservations()` ke tabel reservasi (One-to-Many).
+
+5. `app/Models/Reservation.php`
+   - Fungsi: Model Eloquent representasi tabel `reservations`.
+   - Logika Penting:
+     * Melakukan object-casting khusus pada tanggal_check_in dan tanggal_check_out menjadi tipe data Date/Carbon agar mudah diolah matematisnya di fitur lainnya.
+     * Mendefinisikan inversi relasi `room()` (BelongsTo) agar sistem tahu reservasi ini menempati kamar yang mana.
+
+6. `database/seeders/DatabaseSeeder.php`
+   - Fungsi: Menjalankan injeksi data awal (Dummy Data) ke dalam database secara otomatis.
+   - Logika Penting:
+     * Script ini sangat berguna untuk _testing_ atau _deployment_ pertama. Ia langsung membuat 1 akun Admin utama yang sudah di-hash password-nya.
+     * Membuat berbagai contoh katalog kamar (Standard, Deluxe, VIP) dengan berbagai fasilitas, kapasitas, harga, dan URL gambar lengkap tanpa harus menginput manual dari form.
+     * Membuat beberapa contoh data pemesanan (Reservation) fiktif agar fitur laporan dan dashboard bisa langsung dites.
+
+7. `resources/views/layouts/app.blade.php`
+   - Fungsi: Bertindak sebagai kerangka master antarmuka web (Master UI Layout).
+   - Logika Penting:
+     * Menyusun struktur Navigasi (Navbar) secara dinamis menggunakan sintaks `@if(Auth::user()->role == 'admin')`. Menu 'Dashboard' hanya tampil untuk Admin, sedangkan 'Reservasi Saya' khusus untuk User.
+     * Mendefinisikan slot `@yield('content')` tempat dimana setiap halaman spesifik akan dirender (ditampilkan).
+     * Mengelola munculnya pesan kilat interaktif (Flash Messages / Toasts) menggunakan JavaScript bawaan yang otomatis menghilang setelah 4 detik apabila terjadi kesuksesan/kegagalan aksi.
+
+8. `app/Http/Controllers/RoomController.php` & `ReservationController.php`
+   - Fungsi: Merupakan _Resource Controller_ bawaan standar Laravel.
+   - Logika Penting:
+     * Dalam arsitektur aplikasi ini, banyak alur kerja (*business logic*) justru disuntikkan secara langsung menggunakan *Closure* di dalam `routes/web.php` untuk memusatkan kode dan mempercepat rute. File _controller_ ini sengaja dibiarkan kosong namun tetap dipertahankan sebagai *placeholder* (ruang ganti) seandainya ke depannya aplikasi ini mau direfaktor (*scalable*) menjadi pendekatan arsitektur *MVC* murni.

@@ -13,6 +13,11 @@ use App\Http\Controllers\AuthController;
 // Redirect root to /reservasi_hotel
 Route::redirect('/', '/reservasi_hotel');
 
+Route::get('/random', function () {
+    return view('random');
+});
+
+
 Route::prefix('reservasi_hotel')->group(function () {
     Route::get('/', function () {
         $rooms = Room::all();
