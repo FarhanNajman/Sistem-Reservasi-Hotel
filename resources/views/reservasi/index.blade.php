@@ -27,6 +27,7 @@
                             <th style="padding: 12px 16px; font-weight: 600; color: var(--text-dark);">Check-in / Check-out</th>
                             <th style="padding: 12px 16px; font-weight: 600; color: var(--text-dark);">Total Harga</th>
                             <th style="padding: 12px 16px; font-weight: 600; color: var(--text-dark);">Status</th>
+                            <th style="padding: 12px 16px; font-weight: 600; color: var(--text-dark); text-align: center;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,19 +52,49 @@
                                 Rp {{ number_format($res->total_harga, 0, ',', '.') }}
                             </td>
                             <td style="padding: 12px 16px;">
-                                @if($res->status === 'pending')
-                                    <div style="display:inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; background-color: #fef08a; color: #854d0e; border: 1px solid #fde047;">
-                                        <i data-lucide="clock" style="width: 14px; height: 14px;"></i> Menunggu Pembayaran
+                                @if($res->status === 'menunggu_pembayaran')
+                                    <div style="display:inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; background-color: #f1f5f9; color: #475569; border: 1px solid #cbd5e1;">
+                                        <i data-lucide="wallet" style="width: 14px; height: 14px;"></i> Menunggu Pembayaran
                                     </div>
                                     <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">Silakan selesaikan pembayaran.</div>
-                                @elseif($res->status === 'dikonfirmasi')
-                                    <div style="display:inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; background-color: #bbf7d0; color: #166534; border: 1px solid #86efac;">
-                                        <i data-lucide="check-circle-2" style="width: 14px; height: 14px;"></i> Dikonfirmasi
+                                @elseif($res->status === 'pending')
+                                    <div style="display:inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; background-color: #fef08a; color: #854d0e; border: 1px solid #fde047;">
+                                        <i data-lucide="clock" style="width: 14px; height: 14px;"></i> Pending
                                     </div>
-                                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">Siap untuk Check-in.</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">Menunggu verifikasi admin.</div>
+                                @elseif($res->status === 'dikonfirmasi' || $res->status === 'check_in' || $res->status === 'check_out')
+                                    <div style="display:inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; background-color: #bbf7d0; color: #166534; border: 1px solid #86efac;">
+                                        <i data-lucide="check-circle-2" style="width: 14px; height: 14px;"></i> Lunas
+                                    </div>
+                                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">Pembayaran telah diverifikasi.</div>
                                 @else
                                     <span style="display:inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; background-color: #e2e8f0; color: #475569;">{{ ucfirst($res->status) }}</span>
                                 @endif
+                            </td>
+                            <td style="padding: 12px 16px; text-align: center; vertical-align: middle;">
+                                <div style="display: flex; flex-direction: column; gap: 6px; align-items: stretch; min-width: 110px; margin: 0 auto;">
+                                    @if($res->status === 'menunggu_pembayaran')
+                                        <a href="{{ route('pembayaran.show', $res->id) }}" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; background-color: #3b82f6; color: white; padding: 8px 12px; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: 0.2s; width: 100%; box-sizing: border-box;">
+                                            <i data-lucide="credit-card" style="width: 14px; height: 14px;"></i> Lanjutkan
+                                        </a>
+                                    @elseif($res->status === 'dikonfirmasi' || $res->status === 'check_in' || $res->status === 'check_out')
+                                        <a href="{{ route('invoice.pdf', $res->id) }}" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; background-color: #10b981; color: white; padding: 8px 12px; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: 0.2s; width: 100%; box-sizing: border-box;">
+                                            <i data-lucide="download" style="width: 14px; height: 14px;"></i> Cetak PDF
+                                        </a>
+                                    @elseif($res->status === 'pending')
+                                        <a href="{{ route('invoice.show', $res->id) }}" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; background-color: #f59e0b; color: white; padding: 8px 12px; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: 0.2s; width: 100%; box-sizing: border-box;">
+                                            <i data-lucide="file-text" style="width: 14px; height: 14px;"></i> Invoice
+                                        </a>
+                                    @else
+                                        <span style="color: var(--text-muted); font-size: 0.9rem;">-</span>
+                                    @endif
+
+                                    @if(in_array($res->status, ['pending', 'dikonfirmasi', 'check_in', 'check_out']) && $res->bukti_pembayaran)
+                                        <a href="{{ asset('storage/' . str_replace('public/', '', $res->bukti_pembayaran)) }}" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; background-color: #3b82f6; color: white; padding: 8px 12px; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: 0.2s; width: 100%; box-sizing: border-box;" title="Lihat Bukti">
+                                            <i data-lucide="image" style="width: 14px; height: 14px;"></i> Bukti
+                                        </a>
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                         @endforeach

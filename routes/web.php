@@ -166,7 +166,7 @@ Route::middleware('auth')->group(function () {
             'tanggal_check_in' => $validated['tanggal_check_in'],
             'tanggal_check_out' => $validated['tanggal_check_out'],
             'total_harga' => $totalHarga,
-            'status' => 'pending',
+            'status' => 'menunggu_pembayaran',
             'catatan' => $validated['catatan'],
         ]);
 
@@ -198,10 +198,11 @@ Route::middleware('auth')->group(function () {
         if ($request->hasFile('bukti_pembayaran')) {
             $file = $request->file('bukti_pembayaran');
             $filename = time() . '_' . $reservation->kode_booking . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('public/bukti_pembayaran', $filename);
+            $path = $file->storeAs('bukti_pembayaran', $filename, 'public');
             
             $reservation->update([
-                'bukti_pembayaran' => $path
+                'bukti_pembayaran' => $path,
+                'status' => 'pending'
             ]);
         }
 
@@ -213,6 +214,14 @@ Route::middleware('auth')->group(function () {
         $reservation = Reservation::findOrFail($id);
         return view('pembayaran.invoice', compact('reservation'));
     })->name('invoice.show');
+
+    // Mengunduh invoice sebagai PDF
+    Route::get('/invoice/{id}/pdf', function ($id) {
+        $reservation = Reservation::findOrFail($id);
+        
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pembayaran.invoice_pdf', compact('reservation'));
+        return $pdf->download('invoice-' . $reservation->kode_booking . '.pdf');
+    })->name('invoice.pdf');
 
     // Menampilkan halaman reservasi saya
     Route::get('/reservasi-saya', function () {

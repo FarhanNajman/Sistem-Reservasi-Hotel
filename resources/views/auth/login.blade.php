@@ -54,13 +54,6 @@
                 @enderror
             </div>
 
-            <div class="auth-options">
-                <label class="remember-me">
-                    <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                    <span>Ingat Saya</span>
-                </label>
-                {{-- <a href="#" class="forgot-password">Lupa Password?</a> --}}
-            </div>
 
             <button type="submit" class="auth-btn">
                 <i data-lucide="log-in"></i>

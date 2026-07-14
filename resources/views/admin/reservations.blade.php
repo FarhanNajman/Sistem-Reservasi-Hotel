@@ -58,17 +58,25 @@
                                     <span style="display:inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; background-color: #e2e8f0; color: #475569;">{{ ucfirst($res->status) }}</span>
                                 @endif
                             </td>
-                            <td style="padding: 12px 16px;">
-                                @if($res->status === 'pending')
-                                <form action="{{ route('admin.reservations.confirm', $res->id) }}" method="POST" style="display: inline-block;">
-                                    @csrf
-                                    <button type="submit" style="background-color: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; font-weight: 500;" onclick="return confirm('Konfirmasi pembayaran untuk pesanan ini?');">
-                                        Konfirmasi
-                                    </button>
-                                </form>
-                                @else
-                                <span style="color: var(--text-muted); font-size: 0.9rem;">-</span>
-                                @endif
+                            <td style="padding: 12px 16px; vertical-align: middle;">
+                                <div style="display: flex; flex-direction: column; gap: 6px; align-items: stretch; min-width: 110px; margin: 0 auto;">
+                                    @if($res->bukti_pembayaran)
+                                        <a href="{{ asset('storage/' . str_replace('public/', '', $res->bukti_pembayaran)) }}" target="_blank" style="background-color: #3b82f6; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 4px; width: 100%; box-sizing: border-box;" title="Lihat Bukti">
+                                            <i data-lucide="image" style="width: 14px; height: 14px;"></i> Bukti
+                                        </a>
+                                    @endif
+                                    
+                                    @if($res->status === 'pending')
+                                    <form action="{{ route('admin.reservations.confirm', $res->id) }}" method="POST" style="margin: 0;">
+                                        @csrf
+                                        <button type="submit" style="background-color: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; font-weight: 500; display: inline-flex; align-items: center; justify-content: center; gap: 4px; width: 100%; box-sizing: border-box;" onclick="return confirm('Konfirmasi pembayaran untuk pesanan ini?');">
+                                            <i data-lucide="check" style="width: 14px; height: 14px;"></i> Konfirmasi
+                                        </button>
+                                    </form>
+                                    @elseif(!$res->bukti_pembayaran)
+                                    <span style="color: var(--text-muted); font-size: 0.9rem; text-align: center;">-</span>
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                         @endforeach
